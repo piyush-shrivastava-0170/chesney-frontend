@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlist Management</title>
+  <link rel="stylesheet" href="playlist.css">
+</head>
+<body>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <div class="playlist-card">
+        <div class="playlist-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000080" width="50" height="50">
+            <rect x="4" y="4" width="16" height="16" fill="none" stroke="#000080" stroke-width="2" />
+            <path d="M4,12 L20,12" fill="none" stroke="#000080" stroke-width="2" />
+          </svg>
+        </div>
+        <p class="playlist-text">PLAYLIST</p>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="red-box">
+      <h3>Your Playlists</h3>
+      <div id="playlist-grid" class="playlist-grid"></div>
+    </div>
+
+    <!-- Media View Popup -->
+    <div id="media-view-popup" class="modal">
+      <div class="modal-content">
+        <span id="close-view-popup" class="close-modal">&times;</span>
+        <h3>Media in Playlist</h3>
+        <div id="media-view-grid" class="media-view-grid"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+      import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+        authDomain: "cheney-25352.firebaseapp.com",
+        projectId: "cheney-25352",
+        storageBucket: "cheney-25352.appspot.com",
+        messagingSenderId: "731368175146",
+        appId: "1:731368175146:web:b2fd024d600c930373f553",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth();
+
+      let userId = null;
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const playlistGrid = document.getElementById('playlist-grid');
+        const mediaViewPopup = document.getElementById('media-view-popup');
+        const mediaViewGrid = document.getElementById('media-view-grid');
+        const closeViewPopupBtn = document.getElementById('close-view-popup');
+
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            userId = user.uid;
+            loadPlaylists(userId);
+          } else {
+            alert("Please log in to view and manage your playlists.");
+            window.location.href = 'login.html';
+          }
+        });
+
+        async function loadPlaylists(userId) {
+          playlistGrid.innerHTML = '';
+          const playlistsRef = collection(db, 'users', userId, 'playlists');
+          const playlistsSnapshot = await getDocs(playlistsRef);
+
+          playlistsSnapshot.forEach((doc) => {
+            const playlistData = doc.data();
+            const playlistBox = document.createElement('div');
+            playlistBox.classList.add('playlist-box');
+            playlistBox.innerHTML = `
+              <h4>${playlistData.name}</h4>
+              <p>${playlistData.media?.length || 0} Items</p>
+              <button class="view-playlist-btn" data-id="${doc.id}">View</button>
+              <button class="delete-playlist-btn" data-id="${doc.id}">Delete</button>
+            `;
+            playlistBox.querySelector('.view-playlist-btn').addEventListener('click', () => viewPlaylist(doc.id));
+            playlistBox.querySelector('.delete-playlist-btn').addEventListener('click', () => deletePlaylist(doc.id, playlistData.name));
+            playlistGrid.appendChild(playlistBox);
+          });
+        }
+
+        async function viewPlaylist(playlistId) {
+          const playlistRef = doc(db, 'users', userId, 'playlists', playlistId);
+          const playlistSnap = await getDoc(playlistRef);
+          const playlistData = playlistSnap.data();
+
+          mediaViewGrid.innerHTML = '';
+          if (playlistData.media?.length > 0) {
+            playlistData.media.forEach((mediaUrl) => {
+              const mediaItem = document.createElement('div');
+              mediaItem.classList.add('media-view-item');
+              mediaItem.innerHTML = `<img src="${mediaUrl}" alt="Media in Playlist" />`;
+              mediaViewGrid.appendChild(mediaItem);
+            });
+          } else {
+            mediaViewGrid.innerHTML = '<p>No media in this playlist.</p>';
+          }
+          mediaViewPopup.style.display = 'block';
+        }
+
+        async function deletePlaylist(playlistId, playlistName) {
+          const confirmDelete = confirm(`Are you sure you want to delete the playlist "${playlistName}"?`);
+          if (confirmDelete) {
+            const playlistRef = doc(db, 'users', userId, 'playlists', playlistId);
+            await deleteDoc(playlistRef);
+            alert(`Playlist "${playlistName}" deleted.`);
+            loadPlaylists(userId);
+          }
+        }
+
+        closeViewPopupBtn.addEventListener('click', () => {
+          mediaViewPopup.style.display = 'none';
+          mediaViewGrid.innerHTML = ''; // Clear the media view grid
+        });
+
+        mediaViewPopup.addEventListener('click', (e) => {
+          if (e.target === mediaViewPopup) {
+            mediaViewPopup.style.display = 'none';
+            mediaViewGrid.innerHTML = ''; // Reset media view grid
+          }
+        });
+      });
+
+      async function createGroup() {
+    console.log("Create Group function triggered.");
+
+    const selectedDevices = Array.from(document.querySelectorAll("#devices-list input[type='checkbox']:checked"))
+        .map((checkbox) => checkbox.value);
+    console.log("Selected Devices:", selectedDevices);
+
+    if (selectedDevices.length === 0) {
+        alert("Please select at least one device to create a group.");
+        return;
+    }
+
+    const groupNameInput = document.getElementById("groupNameInput");
+    const groupName = groupNameInput.value.trim();
+    console.log("Group Name:", groupName);
+
+    if (!groupName) {
+        alert("Group name is required.");
+        return;
+    }
+
+    const groupId = `group_${Date.now()}`;
+    const groupData = {
+        name: groupName,
+        devices: selectedDevices,
+        createdAt: Timestamp.now(),
+    };
+
+    console.log("Group Data to Save:", groupData);
+
+    try {
+        const groupRef = doc(db, `users/${userId}/deviceGroups/${groupId}`);
+        await setDoc(groupRef, groupData);
+
+        alert("Group created successfully!");
+        closeGroupModal();
+        loadGroups(userId);
+    } catch (error) {
+        console.error("Error creating group:", error);
+        alert("Failed to create group. Please try again.");
+    }
+}
+
+    </script>
+  </div>
+</body>
+</html>

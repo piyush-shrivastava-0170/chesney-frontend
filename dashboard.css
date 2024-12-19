@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'League Spartan', Arial, sans-serif;
+    background: linear-gradient(to bottom, #800020, #F5F5DC); /* Burgundy to Cream */
+    color: #3D2B1F; /* Dark Brown */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1400px;
+    gap: 20px;
+}
+
+/* Left Section */
+.left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Welcome Card */
+.welcome-card {
+    position: relative;
+    background: #F5F5DC; /* Cream */
+    color: #800020; /* Burgundy */
+    text-align: center;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    top: -50px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #800020; /* Burgundy */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 4px solid #F5F5DC; /* Cream */
+}
+
+/* Menu */
+.menu {
+    background: #800020; /* Burgundy */
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Menu Buttons */
+.menu-button {
+    background: #F5F5DC; /* Cream */
+    color: #800020; /* Burgundy */
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.menu-button:hover {
+    background: #3D2B1F; /* Dark Brown */
+    color: #F5F5DC; /* Cream */
+}
+
+.menu-button:focus {
+    outline: 2px solid #800020; /* Burgundy */
+    outline-offset: 4px;
+}
+
+/* Right Section */
+.right-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Card */
+.form-card {
+    background: #800020; /* Burgundy */
+    color: #F5F5DC; /* Cream */
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #F5F5DC; /* Cream */
+}
+
+/* Inputs */
+.form-group input {
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-family: 'League Spartan', Arial, sans-serif;
+    background: #3D2B1F; /* Dark Brown */
+    color: #F5F5DC; /* Cream */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.form-group input::placeholder {
+    color: #C9C9C9; /* Light Gray */
+    font-weight: bold;
+}
+
+input[readonly] {
+    background: #3D2B1F; /* Dark Brown */
+    color: #F5F5DC; /* Cream */
+    cursor: not-allowed;
+}
+
+/* Button in Form Card */
+.form-card button {
+    background: #F5F5DC; /* Cream */
+    color: #800020; /* Burgundy */
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.form-card button:hover {
+    background: #3D2B1F; /* Dark Brown */
+    color: #F5F5DC; /* Cream */
+}
+
+.form-card button:focus {
+    outline: 2px solid #800020; /* Burgundy */
+    outline-offset: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu, .welcome-card {
+        max-width: 100%;
+    }
+
+    .right-section {
+        flex: 1;
+        width: 100%;
+    }
+
+    .form-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-group input {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .form-card button {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}

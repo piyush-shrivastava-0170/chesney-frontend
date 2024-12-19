@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chesney Signage</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
+  <style>
+    /* Google Button Style */
+    .google-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 20px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 45%; /* Matches the width of other buttons */
+      margin: 20px 0; /* Adds spacing */
+      margin-left: 150px;
+    }
+
+    .google-button:hover {
+      background: #f0f0f0;
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .or-text {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 10px 0; /* Adds space above and below the OR text */
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>FREE, SIMPLE AND EASY SOLUTION WITH<br>CHESNEY SIGNAGE</h1>
+      <div class="social-icons">
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-facebook-f"></i>
+        <img src="images/rb_45422.png" alt="X Logo" class="icon">
+      </div>
+    </div>
+    <div class="form-container">
+      <h2>LOGIN HERE</h2>
+
+      <!-- Google Signup Button -->
+<button class="google-button google-btn">
+  <img src="images/google-logo.avif" alt="Google Icon" class="google-icon">
+  Sign in with Google
+</button>
+
+
+      <!-- OR Text -->
+      <p class="or-text">OR</p>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <input type="email" id="email" placeholder="EMAIL" class="input red-input" required>
+        <div class="error-message" id="login-error"></div>
+        <input type="password" id="password" placeholder="PASSWORD" class="input red-input" required>
+        <button type="submit" class="button white-button">LOGIN</button>
+      </form>
+
+      <!-- New 'Not a member?' section -->
+      <p class="signup-text">Not a member? <a href="signup.html" class="signup-link">SIGNUP</a></p>
+      <p class="website">WWW.CHESNEY.IN</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // Helper function to save admin login data
+    async function saveAdminLoginData(user) {
+      const adminRef = doc(db, "users", user.uid);
+      await setDoc(adminRef, {
+        name: user.displayName || "Admin",
+        email: user.email,
+        role: "admin",
+        lastLogin: serverTimestamp(),
+        devices: [],
+        media: {},
+      }, { merge: true });
+    }
+
+    // Check session persistence
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await saveAdminLoginData(user);
+        window.location.href = 'home.html';
+      }
+    });
+
+    // Handle email/password login
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          await saveAdminLoginData(user);
+          window.location.href = 'home.html';
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          console.error('Login error:', errorMessage);
+          document.getElementById('login-error').textContent = 'Error: ' + errorMessage;
+        });
+    });
+
+    // Handle Google Sign-In
+    document.querySelector('.google-btn').addEventListener('click', () => {
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
+          const user = result.user;
+          await saveAdminLoginData(user);
+          window.location.href = 'home.html';
+        })
+        .catch((error) => {
+          console.error('Google sign-in error:', error.message);
+          document.getElementById('login-error').textContent = 'Google sign-in failed: ' + error.message;
+        });
+    });
+  </script>
+</body>
+</html>

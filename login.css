@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'League Spartan', Arial, sans-serif;
+    background: linear-gradient(to right, #800020, #f5f5dc); /* Burgundy Gradient */
+    color: #f5f5dc; /* Cream */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container */
+.container {
+    display: flex;                                                       
+    justify-content: space-between;
+    width: 85%;
+    max-width: 1200px;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Content Section */
+.content {
+    flex: 1;
+    text-align: left;
+}
+
+h1 {
+    font-size: 3.5rem;
+    line-height: 1.3;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    color: #f5f5dc; /* Cream */
+}
+
+.social-icons {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.social-icons i,
+.social-icons img {
+    font-size: 40px;
+    color: #f5f5dc; /* Cream */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.social-icons i:hover,
+.social-icons img:hover {
+    transform: scale(1.1);
+    color: #800020; /* Burgundy */
+}
+
+.social-icons img {
+    width: 50px;
+    height: 50px;
+    filter: brightness(0) saturate(100%) invert(43%) sepia(59%) saturate(1282%) hue-rotate(320deg) brightness(88%) contrast(97%);
+}
+
+/* Form Container */
+.form-container {
+    flex: 1;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.1); /* Slight transparent black */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #f5f5dc; /* Cream */
+}
+
+.input {
+    display: block;
+    width: 40%;
+    margin: 20px auto;
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 20px;
+    text-align: center;
+    transition: box-shadow 0.2s ease;
+    background: #4b0014; /* Deep Burgundy */
+    color: #f5f5dc; /* Cream */
+}
+
+.input::placeholder {
+    color: #f5f5dc; /* Cream */
+    font-weight: bold;
+}
+
+.input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(128, 0, 32, 0.7); /* Subtle burgundy focus effect */
+}
+
+.white-button {
+    width: 45%;
+    padding: 15px;
+    background: #f5f5dc; /* Cream */
+    color: #800020; /* Burgundy */
+    margin: 20px auto;
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.white-button:hover {
+    background: #e8e4d6; /* Lighter cream */
+    transform: scale(1.03);
+}
+
+/* Login Button Styling */
+.button.white-button {
+    padding: 6px 10px; /* Reduce padding for smaller height */
+    height: 45px; /* Set a fixed height */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    border-radius: 15px; /* Keep rounded corners */
+    background: #f5f5dc; /* Cream background */
+    color: #800020; /* Burgundy text */
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.button.white-button:hover {
+    background: #e8e4d6; /* Lighter cream on hover */
+    transform: scale(1.02); /* Slight hover effect */
+}
+
+.website {
+    margin-top: 20px;
+    color: #f5f5dc; /* Cream */
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Signup Text */
+.signup-text {
+    font-size: 1rem;
+    color: #f5f5dc; /* Cream */
+    margin-top: 10px;
+}
+
+.signup-link {
+    color: #f5f5dc; /* Cream */
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.signup-link:hover {
+    color: #800020; /* Burgundy */
+    text-decoration: underline;
+}
+
+/* Google Button Style */
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f5f5dc !important;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 12px; /* Reduced padding */
+    height: 45px; /* Fixed height */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin: 20px auto;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.google-button img {
+    width: 35px;
+    height: 35px;
+}
+
+.google-button:hover {
+    background: #e8e4d6 !important; /* Ensure hover effect */
+    transform: scale(1.03);
+}
+
+.or-text {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 10px 0; /* Adds space above and below the OR text */
+}

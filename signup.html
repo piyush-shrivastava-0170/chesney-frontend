@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chesney Signage</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="signup.css">
+  <style>
+    /* Google Button Style */
+    .google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f5f5dc !important;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 12px; /* Reduced padding */
+    height: 45px; /* Fixed height */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 50%;
+    margin: 20px auto;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+    .google-button:hover {
+      background: #f0f0f0;
+    }
+
+    .google-icon {
+      width: 35px;
+      height: 35px;
+    }
+
+    .or-text {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 10px 0; /* Adds space above and below the OR text */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>FREE, SIMPLE AND EASY SOLUTION WITH<br>CHESNEY SIGNAGE</h1>
+      <div class="social-icons">
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-facebook-f"></i>
+        <!-- Using the uploaded file as the X logo -->
+        <img src="images/rb_45422.png" alt="X Logo" class="icon">
+      </div>
+    </div>
+    <div class="form-container">
+      <h2>CREATE NEW ACCOUNT</h2>
+      <!-- Google Signup Button -->
+      <button class="google-button" id="google-signup">
+        <img src="./images/google-logo.avif" alt="Google Icon" class="google-icon">
+        Sign Up with Google
+      </button>
+      <!-- OR Text -->
+      <p class="or-text">OR</p>
+      <form id="signup-form">
+        <input type="text" id="name" placeholder="NAME" class="input red-input" required>
+        <input type="email" id="email" placeholder="EMAIL" class="input red-input" required>
+        <input 
+          type="password" 
+          id="password"
+          placeholder="PASSWORD" 
+          class="input red-input" 
+          required
+          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+          title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+        >
+        <button type="submit" class="button white-button">SIGN UP</button>
+      </form>
+      <p class="website">WWW.CHESNEY.IN</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
+  
+    // Form submission handler
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+  
+      try {
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+  
+        // Send email verification
+        try {
+          await sendEmailVerification(user);
+          console.log("Verification email sent to:", email);
+          alert("Sign-Up successful! A verification email has been sent to your email address.");
+        } catch (verificationError) {
+          console.error("Error sending verification email:", verificationError);
+          alert("Failed to send verification email. Please try again.");
+          return; // Stop further execution if email verification fails
+        }
+  
+        // Save user to Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          name: name,
+          email: email,
+          createdAt: Timestamp.now(),
+        });
+  
+        // Redirect to login
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error("Sign-Up error:", error);
+        alert("Sign-Up failed: " + error.message);
+      }
+    });
+  </script>
+  
+</body>
+</html>

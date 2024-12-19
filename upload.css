@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'League Spartan', Arial, sans-serif;
+  background: linear-gradient(to bottom, #800020, #F5F5DC);  /* Burgundy Gradient */
+  color: #f5f5dc; /* Cream */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Main Container */
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+/* Left Section */
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 20%;
+}
+
+/* User Card */
+.user-card {
+  background: #5a0014; /* Dark Burgundy */
+  color: #f5f5dc; /* Cream */
+  text-align: center;
+  border-radius: 15px;
+  padding: 20px;
+  width: 120%;
+  height: 30%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 200px;
+  margin-left: 30px;
+}
+
+.user-card .user-label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Right Section (Red Box) */
+.red-box {
+  background: #800020; /* Burgundy */
+  border-radius: 15px;
+  width: 150%;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 100px;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #f5f5dc; /* Cream */
+  margin-bottom: 20px;
+}
+
+/* Content Container */
+.content-container {
+  background: #5a0014; /* Dark Burgundy */
+  border-radius: 15px;
+  padding: 20px;
+  color: #f5f5dc; /* Cream */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.content-container label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #f5f5dc; /* Cream */
+}
+
+.content-container select,
+.content-container input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  background: #800020; /* Burgundy */
+  color: #f5f5dc; /* Cream */
+}
+
+.content-container select option {
+  background: #f5f5dc; /* Cream */
+  color: #5a0014; /* Dark Burgundy */
+  font-weight: bold;
+}
+
+/* Radio Group */
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-bottom: 15px;
+}
+
+.radio-group label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f5f5dc; /* Cream */
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.action-buttons button {
+  background: #800020; /* Burgundy */
+  color: #f5f5dc; /* Cream */
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  flex: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.action-buttons button:hover {
+  background: #5a0014; /* Dark Burgundy */
+}

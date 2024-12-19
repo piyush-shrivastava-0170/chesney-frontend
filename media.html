@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Management</title>
+  <link rel="stylesheet" href="media.css">
+  <style>
+    .media-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      padding: 5px;
+    }
+
+    .select-media-checkbox {
+      transform: scale(1.5);
+      cursor: pointer;
+      accent-color: #800020;
+    }
+
+    .media-item {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #f5f5dc, #e8e0c3);
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .media-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .upload-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5em;
+      z-index: 1000;
+      display: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+      text-align: center;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="left-section">
+      <div class="gallery-card">
+        <img src="./images/gallerys.jpg" alt="Gallery" class="gallery-image">
+        <p class="gallery-text">GALLERY</p>
+        <button id="add-media-btn" class="add-media-button">+ Add Media</button>
+        <button id="open-playlist-modal" class="add-media-button">Add to Playlist</button>
+        <button id="delete-selected-media" class="add-media-button" style="background-color: #ff4d4d; color: white;">Delete Selected</button>
+        <input id="file-upload" type="file" style="display: none;" multiple />
+      </div>
+    </div>
+
+    <div class="red-box">
+      <h2>Your Media</h2>
+      <div id="media-grid" class="media-grid"></div>
+    </div>
+
+    <div id="playlist-modal" class="modal">
+      <div class="modal-content">
+        <span id="close-modal" class="close-modal">&times;</span>
+
+        <div id="playlist-options" class="playlist-options"></div>
+
+        <div class="new-playlist-section">
+          <h4>Create New Playlist</h4>
+          <input id="new-playlist-name" type="text" placeholder="Enter Playlist Name" />
+          <button id="create-playlist-btn" class="add-media-button">Create Playlist</button>
+        </div>
+
+        <button id="add-to-existing-playlists-btn" class="add-media-button">Add to Existing Playlists</button>
+      </div>
+    </div>
+
+    <div class="upload-overlay" id="upload-overlay">
+      Uploading Media...
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth();
+
+    let userId = null;
+    let selectedMediaUrls = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const mediaGrid = document.getElementById("media-grid");
+      const addMediaBtn = document.getElementById("add-media-btn");
+      const deleteSelectedMediaBtn = document.getElementById("delete-selected-media");
+      const fileUploadInput = document.getElementById("file-upload");
+      const uploadOverlay = document.getElementById("upload-overlay");
+      const openPlaylistModalBtn = document.getElementById("open-playlist-modal");
+      const playlistModal = document.getElementById("playlist-modal");
+      const playlistOptions = document.getElementById("playlist-options");
+      const newPlaylistInput = document.getElementById("new-playlist-name");
+      const createPlaylistBtn = document.getElementById("create-playlist-btn");
+      const addToExistingPlaylistsBtn = document.getElementById("add-to-existing-playlists-btn");
+      const closeModalBtn = document.getElementById("close-modal");
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userId = user.uid;
+          loadMedia(userId);
+          loadPlaylists(userId);
+        } else {
+          alert("Please log in to manage your media.");
+          window.location.href = "login.html";
+        }
+      });
+
+      async function loadMedia(userId) {
+        mediaGrid.innerHTML = "";
+        const mediaRef = collection(db, "users", userId, "media");
+        const mediaSnapshot = await getDocs(mediaRef);
+
+        mediaSnapshot.forEach((doc) => {
+          const mediaData = doc.data();
+          const mediaItem = document.createElement("div");
+          mediaItem.classList.add("media-item");
+
+          const isImage = mediaData.mediaType && mediaData.mediaType.startsWith("image");
+          mediaItem.innerHTML = `
+            ${isImage ? `<img src="${mediaData.mediaUrl}" alt="Media" class="media-thumbnail" />` : 
+              `<video src="${mediaData.mediaUrl}" class="media-thumbnail" controls></video>`}
+            <div class="media-actions">
+              <input type="checkbox" class="select-media-checkbox" data-id="${doc.id}" data-url="${mediaData.mediaUrl}" />
+            </div>
+          `;
+
+          mediaItem.querySelector(".select-media-checkbox").addEventListener("change", (e) => {
+            toggleMediaSelection(mediaData.mediaUrl, e.target.checked);
+          });
+
+          mediaGrid.appendChild(mediaItem);
+        });
+      }
+
+      async function loadPlaylists(userId) {
+        playlistOptions.innerHTML = "";
+        const playlistsRef = collection(db, "users", userId, "playlists");
+        const playlistsSnapshot = await getDocs(playlistsRef);
+
+        playlistsSnapshot.forEach((doc) => {
+          const playlistData = doc.data();
+          const playlistOption = document.createElement("div");
+          playlistOption.classList.add("playlist-option");
+          playlistOption.innerHTML = `
+            <label>
+              <input type="checkbox" data-id="${doc.id}" />
+              ${playlistData.name}
+            </label>
+          `;
+
+          playlistOptions.appendChild(playlistOption);
+        });
+      }
+
+      function toggleMediaSelection(mediaUrl, isSelected) {
+        if (isSelected) {
+          selectedMediaUrls.push(mediaUrl);
+        } else {
+          selectedMediaUrls = selectedMediaUrls.filter((url) => url !== mediaUrl);
+        }
+      }
+
+      openPlaylistModalBtn.addEventListener("click", () => {
+        if (selectedMediaUrls.length === 0) {
+          alert("Please select at least one media item.");
+          return;
+        }
+        playlistModal.style.display = "flex";
+      });
+
+      createPlaylistBtn.addEventListener("click", async () => {
+        const playlistName = newPlaylistInput.value.trim();
+
+        if (playlistName) {
+          const playlistsRef = collection(db, "users", userId, "playlists");
+          await addDoc(playlistsRef, {
+            name: playlistName,
+            media: selectedMediaUrls,
+            createdAt: new Date().toISOString(),
+          });
+          alert(`Playlist "${playlistName}" created and media added.`);
+        }
+
+        closeModal();
+        loadPlaylists(userId);
+      });
+
+      addToExistingPlaylistsBtn.addEventListener("click", async () => {
+        const selectedPlaylists = document.querySelectorAll(".playlist-option input:checked");
+
+        if (selectedPlaylists.length === 0) {
+          alert("Please select at least one playlist to add media.");
+          return;
+        }
+
+        for (const playlistCheckbox of selectedPlaylists) {
+          const playlistId = playlistCheckbox.dataset.id;
+          const playlistRef = doc(db, "users", userId, "playlists", playlistId);
+
+          try {
+            const playlistSnapshot = await getDoc(playlistRef);
+            if (!playlistSnapshot.exists()) continue;
+
+            const existingMedia = playlistSnapshot.data().media || [];
+            const updatedMedia = Array.from(new Set([...existingMedia, ...selectedMediaUrls]));
+
+            await updateDoc(playlistRef, { media: updatedMedia });
+          } catch (error) {
+            console.error("Failed to update playlist:", error);
+          }
+        }
+
+        alert("Selected media added to existing playlists.");
+        closeModal();
+      });
+
+      closeModalBtn.addEventListener("click", closeModal);
+
+      function closeModal() {
+        playlistModal.style.display = "none";
+        newPlaylistInput.value = "";
+        selectedMediaUrls = [];
+      }
+    });
+  </script>
+</body>
+</html>

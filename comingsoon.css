@@ -1,0 +1,107 @@
+/* styles.css */
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #f9f9fc, #eceffc);
+    color: #333;
+  }
+  
+  header {
+    background: #4c6ef5;
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  main {
+    padding: 3rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .showcase {
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 48%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 5px solid #4c6ef5;
+  }
+  
+  .card-content {
+    padding: 1.5rem;
+  }
+  
+  .card h2 {
+    font-size: 2rem;
+    color: #4c6ef5;
+    margin: 0 0 1rem;
+  }
+  
+  .card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 0 1rem;
+  }
+  
+  .card p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: #4c6ef5;
+    color: #fff;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  footer p {
+    margin: 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .card {
+      width: 100%;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  }
+  
