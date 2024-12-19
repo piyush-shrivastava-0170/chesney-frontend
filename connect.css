@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'League Spartan', Arial, sans-serif;
+  background: linear-gradient(to bottom, #800020, #F5F5DC); /* Burgundy Gradient */
+  color: #f5f5dc; /* Cream */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden; /* Prevents any scrolling */
+}
+
+/* Main Container */
+.main-container {
+  display: flex;
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh; /* Ensures the container fits within the viewport */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Left Section */
+.left-section {
+  width: 30%;
+  height: 100%; /* Takes full height of the container */
+}
+
+.connect-screen-box {
+  background: #f5f5dc; /* Cream */
+  border-radius: 15px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 100%; /* Takes full height of the left section */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.connect-text {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #800020; /* Burgundy */
+  margin: 10px 0 15px;
+}
+
+.connect-image {
+  width: 100%; /* Full width of the card */
+  height: 50%; /* Reduced height to avoid overflow */
+  object-fit: contain; /* Maintains aspect ratio */
+  border-radius: 10px; /* Matches the card's rounded corners */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%; /* Ensures form spans the container width */
+}
+
+form input {
+  padding: 10px;
+  border: 2px solid #800020; /* Burgundy */
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
+}
+
+form button {
+  background: #800020; /* Burgundy */
+  color: #f5f5dc; /* Cream */
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s ease;
+}
+
+form button:hover {
+  background: #5a0014; /* Darker Burgundy */
+  transform: translateY(-2px);
+}
+
+/* Red Box (Right Section) */
+.red-box {
+  background: #800020; /* Burgundy */
+  flex-grow: 1;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #f5f5dc;
+  overflow-y: auto; /* Scroll only if content overflows */
+  height: 100%; /* Takes full height of the container */
+  display: flex;
+  flex-direction: column;
+}
+
+.red-box h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto; /* Scroll for large content */
+}
+
+.device-item {
+  background: #f5f5dc; /* Cream */
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #800020; /* Burgundy */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.device-item p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.device-item button {
+  background: #800020; /* Burgundy */
+  color: #f5f5dc; /* Cream */
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s ease;
+}
+
+.device-item button:hover {
+  background: #5a0014; /* Darker Burgundy */
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+  }
+
+  .main-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left-section {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .connect-screen-box {
+    background: #f5f5dc; /* Cream */
+    border-radius: 15px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 100%; /* Full height of the parent container */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .connect-image {
+    width: 100%; /* Full width of the card */
+    height: 100%; /* Full height of the card */
+    max-width: 400px; /* Enlarge image size while maintaining limits */
+    max-height: 400px; /* Larger height */
+    object-fit: cover; /* Force image to cover the space */
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 20px;
+  }
+  
+  
+
+  form input, form button {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .red-box {
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .connect-image {
+    height: 150px;
+  }
+
+  .connect-text {
+    font-size: 1.2rem;
+  }
+
+  .red-box h2 {
+    font-size: 1.2rem;
+  }
+
+  .device-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .device-item button {
+    align-self: flex-end;
+    margin-top: 5px;
+  }
+}

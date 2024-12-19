@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Devices</title>
+  <link rel="stylesheet" href="manage.css">
+</head>
+<body>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <button id="logout-btn" class="sidebar-btn">Log Out</button>
+        <input type="text" id="search-input" class="search-box" placeholder="Search devices..." />
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <h2 class="section-title">Connected Devices</h2>
+      <!-- Device Grid -->
+      <div class="device-grid" id="device-grid">
+        <!-- Dynamically added device cards will appear here -->
+      </div>
+
+      <!-- Media Popup -->
+      <div id="media-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+          <h3>Manage Device</h3>
+          <div id="device-details">
+            <p><strong id="device-name">Device Name</strong></p>
+            <p><em id="device-id">(Device ID)</em></p>
+            <p>Status: <span id="device-status">Offline</span></p>
+          </div>
+
+          <!-- Device Settings -->
+          <div class="device-settings">
+            <label for="orientation-select">Orientation:</label>
+            <select id="orientation-select">
+              <option value="landscape">Landscape</option>
+              <option value="reverse landscape">Reverse Landscape</option>
+              <option value="portrait">Portrait</option>
+              <option value="reverse potarit">Reverse Potrait</option>
+              
+            </select>
+
+            <label for="resize-select">Resize Mode:</label>
+            <select id="resize-select">
+              <option value="contain">Contain</option>
+              <option value="stretch">Stretch</option>
+              <option value="cover">Cover</option>
+            </select>
+
+            <label for="delay-input">Delay (seconds):</label>
+            <input type="number" id="delay-input" min="1" value="5">
+
+            <label for="audio-select">Audio:</label>
+            <select id="audio-select">
+              <option value="mute">Mute</option>
+              <option value="unmute">Unmute</option>
+            </select>
+          </div>
+
+          <!-- Media List -->
+          <div>
+            <h4>Select Media</h4>
+            <ul id="media-list" class="media-list">
+              <!-- Dynamically loaded media thumbnails will appear here -->
+            </ul>
+          </div>
+
+          <!-- Playlist Section -->
+          <div>
+            <h4>Select Playlist</h4>
+            <select id="playlist-select">
+              <option value="">Select Playlist</option>
+            </select>
+            <button id="push-playlist-btn" class="modal-btn">Push Playlist</button>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="modal-buttons">
+            <button id="push-media-btn" class="modal-btn">Push Media</button>
+            <button id="push-restart-btn" class="modal-btn">Push and Restart</button>
+            <button id="clear-restart-btn" class="modal-btn">Clear and Restart</button>
+          </div>
+
+          <button id="close-popup" class="close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add JavaScript -->
+  <script type="module" src="manage_screen.js"></script>
+</body>
+</html>

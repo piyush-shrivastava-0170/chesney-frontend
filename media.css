@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', Arial, sans-serif;
+  background: linear-gradient(to right, #800020, #F5F5DC); /* Burgundy Gradient */
+  color: #f5f5dc; /* Cream */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 90%;
+  max-width: 1200px;
+  gap: 30px;
+  padding: 20px;
+}
+
+/* Left Section */
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 25%;
+}
+
+.gallery-card {
+  background: linear-gradient(135deg, #f5f5dc, #e8e0c3); /* Cream Gradient */
+  border-radius: 15px;
+  padding: 20px 15px;
+  min-height: 620px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color: #800020; /* Burgundy */
+  overflow: hidden;
+  position: relative;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.gallery-text {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 10px 0;
+}
+
+/* Buttons Styling */
+.add-media-button {
+  background: linear-gradient(135deg, #800020, #5a0014);
+  color: #f5f5dc;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 8px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+  width: 90%;
+}
+
+.add-media-button:hover {
+  background: #5a0014;
+  transform: scale(1.05);
+}
+
+.add-media-button.delete-btn {
+  background: #ff4d4d;
+}
+
+.add-media-button.delete-btn:hover {
+  background: #e60000;
+  transform: scale(1.05);
+}
+
+/* Right Section */
+.red-box {
+  background: linear-gradient(135deg, #800020, #5a0014); /* Background gradient */
+  flex-grow: 1; /* Adjusts size relative to other elements */
+  border-radius: 20px; /* Rounded corners */
+  padding: 40px; /* Increase padding for more internal space */
+  min-height: 600px; /* Adjust minimum height */
+  height: auto; /* Allows flexibility for content */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: #f5f5dc;
+}
+
+.red-box h2 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Media Grid */
+.media-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.media-item {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  background: linear-gradient(135deg, #f5f5dc, #e8e0c3);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.media-item:hover {
+  transform: translateY(-5px);
+}
+
+.media-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Checkbox Styling */
+.media-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.select-media-checkbox {
+  transform: scale(1.2);
+  cursor: pointer;
+  accent-color: #800020;
+}
+
+/* Modal Styling */
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #f5f5dc;
+  border-radius: 15px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+.close-modal {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #800020;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.close-modal:hover {
+  color: #5a0014;
+}
+
+/* Playlist Options */
+.playlist-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.playlist-option {
+  background: linear-gradient(135deg, #f5f5dc, #e8e0c3);
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s ease-in-out;
+}
+
+.playlist-option:hover {
+  background: #5a0014;
+  color: #f5f5dc;
+}
+
+.new-playlist-section h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #800020;
+}
+
+.new-playlist-section input {
+  width: 90%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #800020;
+  margin-top: 10px;
+}
+
+.new-playlist-section button {
+  margin-top: 15px;
+}
+
+.add-to-existing-playlists-btn {
+  background: linear-gradient(135deg, #800020, #5a0014);
+  color: #f5f5dc;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px auto;
+  width: 100%;
+  text-align: center;
+}
+
+.add-to-existing-playlists-btn:hover {
+  background: #5a0014;
+  transform: scale(1.05);
+}

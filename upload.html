@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Content</title>
+  <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+     
+
+      <!-- User Card -->
+      <div class="user-card">
+        <p class="user-label"></p>
+        <div class="user-options">
+          <p></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="red-box">
+      <div class="header">Update Content</div>
+      <div class="content-container">
+        <label for="media">Media Type</label>
+        <select id="media">
+          <option value="image">Image</option>
+          <option value="video">Video</option>
+          <option value="url">URL</option>
+          <option value="playlist">Playlist</option>
+        </select>
+
+        <label for="orientation">Orientation</label>
+        <select id="orientation">
+          <option value="portrait">Portrait</option>
+          <option value="portrait-reverse">Portrait Reverse</option>
+          <option value="landscape">Landscape</option>
+          <option value="landscape-reverse">Landscape Reverse</option>
+        </select>
+
+        <label for="delay">Delay</label>
+        <select id="delay">
+          <option value="1">1 second</option>
+          <option value="2">2 seconds</option>
+          <option value="3">3 seconds</option>
+          <option value="4">4 seconds</option>
+          <option value="5">5 seconds</option>
+          <option value="6">6 seconds</option>
+          <option value="7">7 seconds</option>
+          <option value="8">8 seconds</option>
+          <option value="9">9 seconds</option>
+          <option value="10">10 seconds</option>
+        </select>
+
+        <div class="radio-group">
+          <div>
+            <input type="radio" id="mute" name="audio" value="mute" checked>
+            <label for="mute">Mute</label>
+          </div>
+          <div>
+            <input type="radio" id="unmute" name="audio" value="unmute">
+            <label for="unmute">Unmute</label>
+          </div>
+        </div>
+
+        <label for="resize">Resize</label>
+        <div class="radio-group">
+          <div>
+            <input type="radio" id="contain" name="resize" value="contain" checked>
+            <label for="contain">Contain</label>
+          </div>
+          <div>
+            <input type="radio" id="stretch" name="resize" value="stretch">
+            <label for="stretch">Stretch</label>
+          </div>
+          <div>
+            <input type="radio" id="cover" name="resize" value="cover">
+            <label for="cover">Cover</label>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button>Close</button>
+          <button>Action</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

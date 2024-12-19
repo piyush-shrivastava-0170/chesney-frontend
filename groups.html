@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="main-container">
+    <div class="left-section">
+      <h2>Devices</h2>
+      <div>
+        <input type="checkbox" id="select-all-devices" />
+        <label for="select-all-devices">Select All Devices</label>
+      </div>
+      <div id="devices-list" class="device-grid">
+        <!-- Dynamically loaded devices will appear here -->
+      </div>
+    </div>
+
+    <div class="right-section">
+      <h2>Your Groups</h2>
+      <div id="groups-list" class="group-grid">
+        <!-- Dynamically loaded groups will appear here -->
+      </div>
+      <button class="create-group-button" onclick="showGroupModal()">Create Group</button>
+    </div>
+  </div>
+
+  <!-- Group Modal -->
+  <div id="groupModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeGroupModal()">&times;</span>
+      <h2>Create Group</h2>
+      <p>Selected Devices:</p>
+      <ul id="selectedDevicesList"></ul>
+      <input id="groupNameInput" type="text" placeholder="Enter group name" />
+      <button id="createGroupBtn" onclick="createGroup()">Create Group</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+        authDomain: "cheney-25352.firebaseapp.com",
+        projectId: "cheney-25352",
+        storageBucket: "cheney-25352.appspot.com",
+        messagingSenderId: "731368175146",
+        appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    let userId = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userId = user.uid;
+        loadDevices(userId);
+        loadGroups(userId);
+      } else {
+        alert("Please log in to manage your groups.");
+        window.location.href = "login.html";
+      }
+    });
+
+    async function loadDevices(userId) {
+      const devicesList = document.getElementById("devices-list");
+      devicesList.innerHTML = "";
+
+      const devicesRef = collection(db, "devices");
+      const querySnapshot = await getDocs(query(devicesRef, where("connectedBy", "==", userId)));
+
+      if (querySnapshot.empty) {
+        devicesList.innerHTML = "<p>No connected devices found.</p>";
+        return;
+      }
+
+      querySnapshot.forEach((doc) => {
+        const deviceData = doc.data();
+        const deviceItem = document.createElement("div");
+        deviceItem.classList.add("device-item");
+        deviceItem.innerHTML = `
+          <input type="checkbox" id="device-${doc.id}" value="${doc.id}" class="device-checkbox" />
+          <label for="device-${doc.id}">${deviceData.deviceName || `Device ${doc.id}`}</label>
+        `;
+        devicesList.appendChild(deviceItem);
+      });
+
+      addSelectAllFunctionality();
+    }
+
+    function addSelectAllFunctionality() {
+      const selectAllCheckbox = document.getElementById("select-all-devices");
+      const deviceCheckboxes = document.querySelectorAll(".device-checkbox");
+
+      selectAllCheckbox.addEventListener("change", (e) => {
+        deviceCheckboxes.forEach((checkbox) => {
+          checkbox.checked = e.target.checked;
+        });
+      });
+
+      deviceCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const allChecked = Array.from(deviceCheckboxes).every((cb) => cb.checked);
+          const someChecked = Array.from(deviceCheckboxes).some((cb) => cb.checked);
+          selectAllCheckbox.checked = allChecked;
+          selectAllCheckbox.indeterminate = !allChecked && someChecked;
+        });
+      });
+    }
+
+    async function loadGroups(userId) {
+      const groupsList = document.getElementById("groups-list");
+      groupsList.innerHTML = "";
+
+      const groupsRef = collection(db, `users/${userId}/deviceGroups`);
+      const groupsSnapshot = await getDocs(groupsRef);
+
+      if (groupsSnapshot.empty) {
+        groupsList.innerHTML = "<p>No groups assigned yet.</p>";
+        return;
+      }
+
+      groupsSnapshot.forEach((doc) => {
+        const groupData = doc.data();
+        const groupBox = document.createElement("div");
+        groupBox.classList.add("group-box");
+        groupBox.innerHTML = `
+          <h4>${groupData.name}</h4>
+          <p>${groupData.devices.length} Devices</p>
+        `;
+        groupsList.appendChild(groupBox);
+      });
+    }
+
+    function showGroupModal() {
+      const selectedDevices = Array.from(document.querySelectorAll(".device-checkbox:checked"))
+        .map((checkbox) => checkbox.value);
+
+      if (selectedDevices.length === 0) {
+        alert("Please select at least one device to create a group.");
+        return;
+      }
+
+      const selectedDevicesList = document.getElementById("selectedDevicesList");
+      selectedDevicesList.innerHTML = "";
+      selectedDevices.forEach((deviceId) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = deviceId;
+        selectedDevicesList.appendChild(listItem);
+      });
+
+      document.getElementById("groupModal").style.display = "block";
+    }
+    window.showGroupModal = showGroupModal;
+
+    function closeGroupModal() {
+      document.getElementById("groupModal").style.display = "none";
+    }
+    window.closeGroupModal = closeGroupModal;
+
+    async function createGroup() {
+      const selectedDevices = Array.from(document.querySelectorAll(".device-checkbox:checked"))
+        .map((checkbox) => checkbox.value);
+
+      if (selectedDevices.length === 0) {
+        alert("Please select at least one device to create a group.");
+        return;
+      }
+
+      const groupNameInput = document.getElementById("groupNameInput");
+      const groupName = groupNameInput.value.trim();
+
+      if (!groupName) {
+        alert("Group name is required.");
+        return;
+      }
+
+      const groupId = `group_${Date.now()}`;
+      const groupData = {
+        name: groupName,
+        devices: selectedDevices,
+        createdAt: Timestamp.now(),
+      };
+
+      try {
+        const groupRef = doc(db, `users/${userId}/deviceGroups/${groupId}`);
+        await setDoc(groupRef, groupData);
+
+        alert("Group created successfully!");
+        closeGroupModal();
+        loadGroups(userId);
+      } catch (error) {
+        console.error("Error creating group:", error);
+        alert("Failed to create group. Please try again.");
+      }
+    }
+    window.createGroup = createGroup;
+  </script>
+</body>
+</html>

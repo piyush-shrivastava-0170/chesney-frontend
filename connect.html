@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Devices</title>
+  <link rel="stylesheet" href="connect.css">
+</head>
+<body>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <!-- Connect Screen Box -->
+      <div class="connect-screen-box">
+        <p class="connect-text">CONNECT<br>SCREEN</p>
+        <img src="./images/connect.svg" alt="connect" class="connect-image">
+        <!-- Form to Connect a Device -->
+        <form id="connect-form">
+          <input type="text" id="device-id" placeholder="Enter Device ID" required />
+          <button type="submit">Connect Device</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Red Box -->
+    <div class="red-box">
+      <h2>Connected Devices</h2>
+      <!-- List of Connected Devices -->
+      <div id="device-list">
+        <!-- Device items will be dynamically populated here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase and JavaScript Integration -->
+  <script type="module">
+    // Import Firebase libraries
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      collection,
+      onSnapshot,
+    } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    /**
+     * Connect a device to the admin by its Device ID.
+     */
+    async function connectDevice(userId, deviceId) {
+      try {
+        const deviceRef = doc(db, "devices", deviceId);
+        const deviceSnapshot = await getDoc(deviceRef);
+
+        if (!deviceSnapshot.exists()) {
+          alert("Device not found in the system. Please check the Device ID.");
+          return;
+        }
+
+        const deviceData = deviceSnapshot.data();
+
+        if (deviceData.connectedBy && deviceData.connectedBy !== userId) {
+          alert("This device is already connected by another admin.");
+          return;
+        }
+
+        await updateDoc(deviceRef, {
+          connectedBy: userId,
+          status: "active",
+          connectedAt: new Date().toISOString(),
+        });
+
+        alert("Device connected successfully!");
+      } catch (error) {
+        console.error("Error connecting device:", error);
+        alert("An error occurred while connecting the device. Please try again.");
+      }
+    }
+
+    /**
+     * Disconnect a device.
+     */
+    async function disconnectDevice(deviceId) {
+      try {
+        const deviceRef = doc(db, "devices", deviceId);
+
+        await updateDoc(deviceRef, {
+          connectedBy: null,
+          status: "inactive",
+          connectedAt: null,
+        });
+
+        alert("Device disconnected successfully!");
+      } catch (error) {
+        console.error("Error disconnecting device:", error);
+        alert("An error occurred while disconnecting the device. Please try again.");
+      }
+    }
+
+    /**
+     * Load all devices connected by the current admin in real time.
+     */
+    function loadDevices(userId) {
+      const devicesRef = collection(db, "devices");
+      const deviceList = document.getElementById("device-list");
+
+      onSnapshot(devicesRef, (snapshot) => {
+        deviceList.innerHTML = ""; // Clear the list
+
+        snapshot.forEach((doc) => {
+          const deviceData = doc.data();
+          if (deviceData.connectedBy === userId) {
+            const deviceItem = document.createElement("div");
+            deviceItem.classList.add("device-item");
+            deviceItem.innerHTML = `
+              <p><strong>Device Name:</strong> ${deviceData.deviceName || "Unnamed Device"}</p>
+              <p><strong>Device ID:</strong> ${doc.id}</p>
+              <p><strong>Status:</strong> ${deviceData.status}</p>
+              <p><strong>Connected At:</strong> ${new Date(deviceData.connectedAt).toLocaleString()}</p>
+              <button class="disconnect-btn" data-id="${doc.id}">Disconnect</button>
+            `;
+            deviceList.appendChild(deviceItem);
+          }
+        });
+
+        // Attach event listeners to disconnect buttons
+        const disconnectButtons = document.querySelectorAll(".disconnect-btn");
+        disconnectButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const deviceId = button.getAttribute("data-id");
+            if (confirm("Are you sure you want to disconnect this device?")) {
+              disconnectDevice(deviceId);
+            }
+          });
+        });
+      });
+    }
+
+    /**
+     * Initialize app and event listeners.
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userId = user.uid;
+
+          // Load connected devices
+          loadDevices(userId);
+
+          // Handle device connection
+          const connectForm = document.getElementById("connect-form");
+          connectForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const deviceId = document.getElementById("device-id").value.trim();
+            if (deviceId) {
+              connectDevice(userId, deviceId);
+            } else {
+              alert("Please enter a valid Device ID.");
+            }
+          });
+        } else {
+          // Redirect to login if not authenticated
+          window.location.href = "login.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

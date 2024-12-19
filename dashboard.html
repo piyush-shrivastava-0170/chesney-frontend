@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section">
+      <div class="welcome-card">
+        <img src="./images/logo1.png" alt="Logo" class="logo">
+        <p class="welcome-text">WELCOME <span id="username">USER</span></p>
+      </div>
+      <div class="menu">
+        <a href="manage.html">
+          <button class="menu-button">MANAGE SCREEN</button>
+        </a>
+        <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer">
+          <button class="menu-button">FAQ</button>
+        </a>
+        <a href="https://www.chesney.in" target="_blank">
+          <button class="menu-button">CONTACT US</button>
+        </a>
+        <button id="logout-btn" class="menu-button">LOG OUT</button>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <!-- Display User Info -->
+      <div class="form-card">
+        <div class="form-group">
+          <label for="name">NAME</label>
+          <input type="text" id="name" placeholder="Enter your name" readonly>
+        </div>
+        <div class="form-group">
+          <label for="email">LOGIN EMAIL</label>
+          <input type="text" id="email" placeholder="Enter your email" readonly>
+        </div>
+      </div>
+
+      <!-- Reset Password Section -->
+      <div class="form-card">
+        <h3>Reset Password</h3>
+        <div class="form-group">
+          <label for="reset-email">EMAIL</label>
+          <input type="email" id="reset-email" placeholder="Enter your email">
+        </div>
+        <button id="send-reset-email-btn" class="menu-button">SEND RESET EMAIL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Check for password reset success via query parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("reset")) {
+        const resetSuccess = urlParams.get("reset");
+
+        if (resetSuccess === "true") {
+          alert("Password successfully changed! You can now log in using your new password.");
+          // Remove query parameter from the URL
+          window.history.replaceState(null, null, window.location.pathname);
+        }
+      }
+
+      // Display user info
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const displayName = user.displayName || user.email.split('@')[0];
+          const email = user.email;
+
+          // Populate user details
+          document.getElementById('username').textContent = displayName.toUpperCase();
+          document.getElementById('name').value = displayName;
+          document.getElementById('email').value = email;
+        } else {
+          // Redirect to login page if user is not logged in
+          window.location.href = "login.html";
+        }
+      });
+
+      // Logout functionality
+      document.getElementById("logout-btn").addEventListener("click", async () => {
+        if (confirm("Are you sure you want to log out?")) {
+          try {
+            await signOut(auth);
+            window.location.href = "login.html";
+          } catch (error) {
+            alert("Failed to log out. Please try again.");
+          }
+        }
+      });
+
+      // Send Password Reset Email functionality
+      const sendResetEmailButton = document.getElementById("send-reset-email-btn");
+      sendResetEmailButton.addEventListener("click", async () => {
+        const email = document.getElementById("reset-email").value;
+        if (!email) {
+          alert("Please enter your email.");
+          return;
+        }
+
+        const actionCodeSettings = {
+          url: "https://yourdomain.com/dashboard.html?reset=true", // Replace with your actual domain
+          handleCodeInApp: false,
+        };
+
+        try {
+          await sendPasswordResetEmail(auth, email, actionCodeSettings);
+          alert("Password reset email sent. Please check your inbox.");
+        } catch (error) {
+          alert("Error sending password reset email: " + error.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

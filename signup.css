@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'League Spartan', Arial, sans-serif;
+    background: linear-gradient(to right, #800020, #f5f5dc); /* Burgundy Gradient */
+    color: #f5f5dc; /* Cream */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+}
+
+.content {
+    flex: 1;
+    margin-top: 130px;
+}
+
+h1 {
+    font-size: 3.5rem;
+    line-height: 1.5;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 50px;
+    color: #f5f5dc; /* Cream */
+}
+
+.social-icons {
+    margin-top: 20px;
+    display: flex; /* Horizontal alignment */
+    align-items: center; /* Vertical alignment */
+    gap: 20px; /* Consistent spacing between icons */
+}
+
+.social-icons i,
+.social-icons img {
+    font-size: 40px; /* Consistent size for all icons */
+    color: #f5f5dc; /* Cream */
+    width: 40px; /* Adjusted size for image icons */
+    height: 40px;
+    cursor: pointer;
+}
+
+.social-icons img {
+    width: 50px; /* Increased size */
+    height: 50px; /* Increased size */
+    filter: brightness(0) saturate(100%) invert(57%) sepia(92%) saturate(2502%) hue-rotate(9deg) brightness(103%) contrast(101%);
+}
+
+.form-container {
+    flex: 1;
+    text-align: center;
+    background: #4b0014; /* Deep Burgundy */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-top: 45px; /* Increased top margin to push down heading */
+    margin-bottom: 50px; /* Space between heading and form */
+    color: #f5f5dc; /* Cream */
+}
+
+.input {
+    display: block;
+    width: 40%; /* Adjusted size */
+    margin: 20px auto; /* Slightly increased vertical spacing */
+    padding: 12px; /* Slightly increased padding */
+    font-size: 1rem; /* Slightly larger font for inputs */
+    border: none;
+    border-radius: 20px;
+    text-align: center;
+    background: #800020; /* Burgundy */
+    color: #f5f5dc; /* Cream */
+}
+
+.input::placeholder {
+    color: #f5f5dc; /* Cream Placeholder */
+    opacity: 0.8;
+    font-weight: bold;
+}
+
+.button.white-button {
+    width: 49%; /* Adjusted size */
+    padding: 12px; /* Slightly increased padding */
+    background: #f5f5dc; /* Cream */
+    color: #800020; /* Burgundy Text */
+    margin: 25px auto; /* Same spacing as inputs */
+    border: none;
+    border-radius: 20px;
+    font-size: 1rem; /* Slightly larger font size */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button.white-button:hover {
+    background: #e8e4d6; /* Lighter Cream */
+}
+
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f5f5dc; /* Cream */
+    color: #4b0014; /* Burgundy */
+    border: none;
+    border-radius: 20px;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100px; /* Matches the width of other buttons */
+    margin: 20px auto; /* Centers the button */
+}
+
+.google-button:hover {
+    background: #e8e4d6; /* Lighter Cream */
+}
+
+.google-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.or-text {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 20px 0; /* Adds space above and below the OR text */
+    color: #f5f5dc; /* Cream */
+}
+
+.website {
+    margin-top: 30px; /* Increased spacing from the button */
+    color: #f5f5dc; /* Cream */
+    font-size: 1rem; /* Slightly larger font */
+    font-weight: bold;
+    letter-spacing: 1px;
+}
