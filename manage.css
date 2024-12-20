@@ -11,6 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .main-container {
@@ -23,6 +24,8 @@ body {
   border-radius: 10px;
   overflow: hidden;
   padding: 20px;
+  height: 85vh; /* Reduced height */
+  overflow: hidden;
 }
 
 /* Left Section */
@@ -73,6 +76,8 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  overflow-y: auto; /* Enable scrolling for devices */
+  height: 40%; /* Set height for device grid scroll */
 }
 
 .device-card {
@@ -124,6 +129,8 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
   gap: 20px;
   margin-top: 20px;
+  overflow-y: auto; /* Enable scrolling for groups */
+  height: 40%; /* Set height for group grid scroll */
 }
 
 .group-card {
