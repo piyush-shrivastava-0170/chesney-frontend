@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Devices</title>
+  <title>Manage Devices and Groups</title>
   <link rel="stylesheet" href="manage.css">
 </head>
 <body>
@@ -13,7 +13,6 @@
       <!-- Sidebar -->
       <div class="sidebar">
         <button id="logout-btn" class="sidebar-btn">Log Out</button>
-        <input type="text" id="search-input" class="search-box" placeholder="Search devices..." />
       </div>
     </div>
 
@@ -25,13 +24,19 @@
         <!-- Dynamically added device cards will appear here -->
       </div>
 
+      <h2 class="section-title">Groups</h2>
+      <!-- Groups Grid -->
+      <div class="groups-grid" id="groups-list">
+        <!-- Dynamically added group cards will appear here -->
+      </div>
+
       <!-- Media Popup -->
       <div id="media-popup" class="popup" style="display: none;">
         <div class="popup-content">
-          <h3>Manage Device</h3>
+          <h3>Manage</h3>
           <div id="device-details">
-            <p><strong id="device-name">Device Name</strong></p>
-            <p><em id="device-id">(Device ID)</em></p>
+            <p><strong id="device-name">Device/Group Name</strong></p>
+            <p><em id="device-id">(Device/Group ID)</em></p>
             <p>Status: <span id="device-status">Offline</span></p>
           </div>
 
@@ -42,8 +47,7 @@
               <option value="landscape">Landscape</option>
               <option value="reverse landscape">Reverse Landscape</option>
               <option value="portrait">Portrait</option>
-              <option value="reverse potarit">Reverse Potrait</option>
-              
+              <option value="reverse portrait">Reverse Portrait</option>
             </select>
 
             <label for="resize-select">Resize Mode:</label>
@@ -93,7 +97,6 @@
     </div>
   </div>
 
-  <!-- Add JavaScript -->
   <script type="module" src="manage_screen.js"></script>
 </body>
 </html>

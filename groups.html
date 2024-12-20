@@ -4,42 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Group Management</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="groups.css">
 </head>
 <body>
-  <div class="main-container">
-    <div class="left-section">
-      <h2>Devices</h2>
-      <div>
-        <input type="checkbox" id="select-all-devices" />
-        <label for="select-all-devices">Select All Devices</label>
-      </div>
-      <div id="devices-list" class="device-grid">
-        <!-- Dynamically loaded devices will appear here -->
-      </div>
-    </div>
-
-    <div class="right-section">
-      <h2>Your Groups</h2>
-      <div id="groups-list" class="group-grid">
-        <!-- Dynamically loaded groups will appear here -->
-      </div>
-      <button class="create-group-button" onclick="showGroupModal()">Create Group</button>
-    </div>
-  </div>
-
-  <!-- Group Modal -->
-  <div id="groupModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeGroupModal()">&times;</span>
-      <h2>Create Group</h2>
-      <p>Selected Devices:</p>
-      <ul id="selectedDevicesList"></ul>
-      <input id="groupNameInput" type="text" placeholder="Enter group name" />
-      <button id="createGroupBtn" onclick="createGroup()">Create Group</button>
-    </div>
-  </div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, setDoc, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
@@ -47,11 +14,11 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
-        authDomain: "cheney-25352.firebaseapp.com",
-        projectId: "cheney-25352",
-        storageBucket: "cheney-25352.appspot.com",
-        messagingSenderId: "731368175146",
-        appId: "1:731368175146:web:b2fd024d600c930373f553",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
     };
 
     const app = initializeApp(firebaseConfig);
@@ -60,9 +27,60 @@
 
     let userId = null;
 
+    // Initialize the layout
+    function initializeLayout() {
+      document.body.innerHTML = `
+        <div class="main-container">
+          <div class="left-section">
+            <h2>Devices</h2>
+            <div>
+              <input type="checkbox" id="select-all-devices" />
+              <label for="select-all-devices">Select All Devices</label>
+            </div>
+            <div id="devices-list" class="device-grid">
+              <!-- Dynamically loaded devices will appear here -->
+            </div>
+          </div>
+
+          <div class="right-section">
+            <h2>Your Groups</h2>
+            <div id="groups-list" class="group-grid">
+              <!-- Dynamically loaded groups will appear here -->
+            </div>
+            <button class="create-group-button" id="showGroupModal">Create Group</button>
+          </div>
+        </div>
+
+        <!-- Group Modal -->
+        <div id="groupModal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeGroupModal">&times;</span>
+            <h2>Create Group</h2>
+            <p>Selected Devices:</p>
+            <ul id="selectedDevicesList"></ul>
+            <input id="groupNameInput" type="text" placeholder="Enter group name" />
+            <button id="createGroupBtn">Create Group</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Event listeners for modal
+    function initializeEventListeners() {
+      const showGroupModalBtn = document.getElementById("showGroupModal");
+      const closeGroupModalBtn = document.getElementById("closeGroupModal");
+      const createGroupBtn = document.getElementById("createGroupBtn");
+
+      showGroupModalBtn.addEventListener("click", showGroupModal);
+      closeGroupModalBtn.addEventListener("click", closeGroupModal);
+      createGroupBtn.addEventListener("click", createGroup);
+    }
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         userId = user.uid;
+        initializeLayout();
+        initializeEventListeners();
         loadDevices(userId);
         loadGroups(userId);
       } else {
@@ -160,12 +178,10 @@
 
       document.getElementById("groupModal").style.display = "block";
     }
-    window.showGroupModal = showGroupModal;
 
     function closeGroupModal() {
       document.getElementById("groupModal").style.display = "none";
     }
-    window.closeGroupModal = closeGroupModal;
 
     async function createGroup() {
       const selectedDevices = Array.from(document.querySelectorAll(".device-checkbox:checked"))
@@ -203,7 +219,6 @@
         alert("Failed to create group. Please try again.");
       }
     }
-    window.createGroup = createGroup;
   </script>
 </body>
 </html>

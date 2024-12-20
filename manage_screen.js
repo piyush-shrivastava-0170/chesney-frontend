@@ -35,11 +35,11 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     adminUID = user.uid;
     loadDevices();
+    loadGroups();
     setupEventListeners();
     loadPlaylists();
-    displayConnectedDevices();
   } else {
-    alert("You must log in to access this screen.");
+    alert("Please log in to access this screen.");
     window.location.href = "login.html";
   }
 });
@@ -74,27 +74,154 @@ function createDeviceCard(device, deviceId) {
   return card;
 }
 
+// Load Groups
+async function loadGroups() {
+  const groupsList = document.getElementById("groups-list");
+  const groupsRef = collection(db, `users/${adminUID}/deviceGroups`);
+
+  onSnapshot(groupsRef, (snapshot) => {
+    groupsList.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const group = doc.data();
+      const groupCard = createGroupCard(group, doc.id);
+      groupsList.appendChild(groupCard);
+    });
+  });
+}
+
+// Create Group Card
+function createGroupCard(group, groupId) {
+  const card = document.createElement("div");
+  card.className = "group-card";
+  card.innerHTML = `
+    <h4>${group.groupName || "Unnamed Group"}</h4>
+    <p>Group ID: ${groupId}</p>
+    <p>${group.devices.length} Devices</p>
+    <button class="manage-group-btn" data-id="${groupId}">Manage</button>
+  `;
+  card.querySelector(".manage-group-btn").addEventListener("click", () => openGroupPopup(group, groupId));
+  return card;
+}
+
+// Open Group Popup
+function openGroupPopup(group, groupId) {
+  const popup = document.getElementById("media-popup");
+  popup.style.display = "flex";
+
+  document.getElementById("device-name").textContent = group.groupName || "Unnamed Group";
+  document.getElementById("device-id").textContent = `Group ID: ${groupId}`;
+  document.getElementById("device-status").textContent = `${group.devices.length} Devices`;
+
+  loadMediaList();
+  loadPlaylists();
+
+  document.getElementById("push-media-btn").onclick = () => pushMediaToGroup(group.devices);
+  document.getElementById("push-playlist-btn").onclick = () => pushPlaylistToGroup(group.devices);
+  document.getElementById("close-popup").onclick = () => closePopup(popup);
+}
+
+// Push Media to Group
+function pushMediaToGroup(deviceIds) {
+  const selectedMedia = document.querySelector(".media-item.selected");
+  if (!selectedMedia) {
+    alert("Please select media to push.");
+    return;
+  }
+
+  const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
+
+  deviceIds.forEach(async (deviceId) => {
+    const deviceRef = doc(db, "devices", deviceId);
+    await updateDoc(deviceRef, {
+      currentMedia: [mediaUrl],
+      lastContentPush: serverTimestamp(),
+    });
+  });
+
+  alert("Media pushed to all devices in the group!");
+}
+
+// Push Playlist to Group
+function pushPlaylistToGroup(deviceIds) {
+  const selectedPlaylistId = document.getElementById("playlist-select").value;
+  if (!selectedPlaylistId) {
+    alert("Please select a playlist.");
+    return;
+  }
+
+  deviceIds.forEach(async (deviceId) => {
+    const deviceRef = doc(db, "devices", deviceId);
+    const playlistRef = doc(db, `users/${adminUID}/playlists`, selectedPlaylistId);
+    const playlistDoc = await getDoc(playlistRef);
+
+    if (playlistDoc.exists()) {
+      await updateDoc(deviceRef, {
+        currentMedia: playlistDoc.data().media,
+        lastContentPush: serverTimestamp(),
+      });
+    }
+  });
+
+  alert("Playlist pushed to all devices in the group!");
+}
+
 // Open Device Popup
 function openDevicePopup(device, deviceId) {
   const popup = document.getElementById("media-popup");
   popup.style.display = "flex";
 
   document.getElementById("device-name").textContent = device.deviceName || "Unnamed Device";
-  document.getElementById("device-id").textContent = deviceId;
+  document.getElementById("device-id").textContent = `Device ID: ${deviceId}`;
   document.getElementById("device-status").textContent = device.status || "Unknown";
-  document.getElementById("orientation-select").value = device.orientation || "landscape";
-  document.getElementById("resize-select").value = device.resize || "contain"; // Added resize
-  document.getElementById("delay-input").value = device.delay || 5;
-  document.getElementById("audio-select").value = device.audio || "mute";
 
   loadMediaList();
+  loadPlaylists();
 
   document.getElementById("push-media-btn").onclick = () => pushMedia(deviceId);
   document.getElementById("push-playlist-btn").onclick = () => pushPlaylist(deviceId);
-  document.getElementById("push-restart-btn").onclick = () => pushAndRestart(deviceId);
-  document.getElementById("clear-restart-btn").onclick = () => clearAndRestart(deviceId);
-  document.getElementById("resize-select").onchange = (e) => updateResize(deviceId, e.target.value);
   document.getElementById("close-popup").onclick = () => closePopup(popup);
+}
+
+// Push Media
+function pushMedia(deviceId) {
+  const selectedMedia = document.querySelector(".media-item.selected");
+  if (!selectedMedia) {
+    alert("Please select media to push.");
+    return;
+  }
+
+  const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
+  const deviceRef = doc(db, "devices", deviceId);
+
+  updateDoc(deviceRef, {
+    currentMedia: [mediaUrl],
+    lastContentPush: serverTimestamp(),
+  })
+    .then(() => alert("Media pushed successfully!"))
+    .catch((error) => console.error("Error pushing media:", error));
+}
+
+// Push Playlist
+function pushPlaylist(deviceId) {
+  const selectedPlaylistId = document.getElementById("playlist-select").value;
+  if (!selectedPlaylistId) {
+    alert("Please select a playlist.");
+    return;
+  }
+
+  const deviceRef = doc(db, "devices", deviceId);
+  const playlistRef = doc(db, `users/${adminUID}/playlists`, selectedPlaylistId);
+
+  getDoc(playlistRef)
+    .then((playlistDoc) => {
+      if (playlistDoc.exists()) {
+        updateDoc(deviceRef, {
+          currentMedia: playlistDoc.data().media,
+          lastContentPush: serverTimestamp(),
+        }).then(() => alert("Playlist pushed successfully!"));
+      }
+    })
+    .catch((error) => console.error("Error pushing playlist:", error));
 }
 
 // Close Popup
@@ -107,102 +234,43 @@ async function loadMediaList() {
   const mediaList = document.getElementById("media-list");
   mediaList.innerHTML = "";
 
-  try {
-    const mediaRef = collection(db, `users/${adminUID}/media`);
-    const querySnapshot = await getDocs(mediaRef);
+  const mediaRef = collection(db, `users/${adminUID}/media`);
+  const querySnapshot = await getDocs(mediaRef);
 
-    querySnapshot.forEach((doc) => {
-      const media = doc.data();
-      const mediaItem = document.createElement("li");
-      mediaItem.className = "media-item";
-      mediaItem.innerHTML = `
-        <img src="${media.mediaUrl}" alt="${media.mediaType}" class="thumbnail" />
-        <button class="select-media-btn" data-url="${media.mediaUrl}">Select</button>
-      `;
-      mediaItem.querySelector(".select-media-btn").addEventListener("click", () => selectMedia(mediaItem));
-      mediaList.appendChild(mediaItem);
-    });
-  } catch (error) {
-    console.error("Error loading media list:", error);
-  }
-}
-
-// Push Media with Resize
-async function pushMedia(deviceId) {
-  const selectedMedia = document.querySelector(".media-item.selected");
-  if (!selectedMedia) {
-    alert("Please select media to push.");
-    return;
-  }
-
-  const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
-  const orientation = document.getElementById("orientation-select").value;
-  const resize = document.getElementById("resize-select").value; // Added resize selection
-  const audio = document.getElementById("audio-select").value;
-
-  const deviceRef = doc(db, "devices", deviceId);
-
-  try {
-    await updateDoc(deviceRef, {
-      currentMedia: [mediaUrl],
-      orientation: orientation,
-      resize: resize, // Update resize
-      audio: audio,
-      lastContentPush: serverTimestamp(),
-    });
-    alert("Media pushed successfully!");
-  } catch (error) {
-    console.error("Error pushing media:", error);
-  }
-}
-
-// Push Playlist
-async function pushPlaylist(deviceId) {
-  const selectedPlaylistId = document.getElementById("playlist-select").value;
-  if (!selectedPlaylistId) {
-    alert("Please select a playlist.");
-    return;
-  }
-
-  try {
-    const playlistRef = doc(db, `users/${adminUID}/playlists`, selectedPlaylistId);
-    const playlistDoc = await getDoc(playlistRef);
-    const playlist = playlistDoc.data();
-
-    const orientation = document.getElementById("orientation-select").value;
-    const resize = document.getElementById("resize-select").value; // Added resize selection
-    const audio = document.getElementById("audio-select").value;
-
-    const deviceRef = doc(db, "devices", deviceId);
-
-    await updateDoc(deviceRef, {
-      currentMedia: playlist.media,
-      orientation: orientation,
-      resize: resize, // Update resize
-      audio: audio,
-      lastContentPush: serverTimestamp(),
-    });
-    alert("Playlist pushed successfully!");
-  } catch (error) {
-    console.error("Error pushing playlist:", error);
-  }
-}
-
-// Update Resize
-async function updateResize(deviceId, resize) {
-  const deviceRef = doc(db, "devices", deviceId);
-  try {
-    await updateDoc(deviceRef, { resize });
-    alert("Resize setting updated!");
-  } catch (error) {
-    console.error("Error updating resize:", error);
-  }
+  querySnapshot.forEach((doc) => {
+    const media = doc.data();
+    const mediaItem = document.createElement("li");
+    mediaItem.className = "media-item";
+    mediaItem.innerHTML = `
+      <img src="${media.mediaUrl}" alt="${media.mediaType}" class="thumbnail" />
+      <button class="select-media-btn" data-url="${media.mediaUrl}">Select</button>
+    `;
+    mediaItem.querySelector(".select-media-btn").addEventListener("click", () => selectMedia(mediaItem));
+    mediaList.appendChild(mediaItem);
+  });
 }
 
 // Select Media
 function selectMedia(mediaItem) {
   document.querySelectorAll(".media-item").forEach((item) => item.classList.remove("selected"));
   mediaItem.classList.add("selected");
+}
+
+// Load Playlists
+async function loadPlaylists() {
+  const playlistSelect = document.getElementById("playlist-select");
+  playlistSelect.innerHTML = `<option value="">Select Playlist</option>`;
+
+  const playlistsRef = collection(db, `users/${adminUID}/playlists`);
+  const querySnapshot = await getDocs(playlistsRef);
+
+  querySnapshot.forEach((doc) => {
+    const playlist = doc.data();
+    const option = document.createElement("option");
+    option.value = doc.id;
+    option.textContent = playlist.name || "Unnamed Playlist";
+    playlistSelect.appendChild(option);
+  });
 }
 
 // Setup Event Listeners

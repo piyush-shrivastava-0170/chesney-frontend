@@ -6,6 +6,7 @@ import {
   where,
   onSnapshot,
   doc,
+  getDoc,
   setDoc,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
@@ -13,11 +14,11 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
-      authDomain: "cheney-25352.firebaseapp.com",
-      projectId: "cheney-25352",
-      storageBucket: "cheney-25352.appspot.com",
-      messagingSenderId: "731368175146",
-      appId: "1:731368175146:web:b2fd024d600c930373f553",
+  authDomain: "cheney-25352.firebaseapp.com",
+  projectId: "cheney-25352",
+  storageBucket: "cheney-25352.appspot.com",
+  messagingSenderId: "731368175146",
+  appId: "1:731368175146:web:b2fd024d600c930373f553",
 };
 
 // Initialize Firebase
@@ -92,13 +93,26 @@ async function createGroup() {
     return;
   }
 
-  const groupDevices = selectedDevices.map((checkbox) => checkbox.id);
-
   try {
+    const groupDevices = [];
+    for (const checkbox of selectedDevices) {
+      const deviceId = checkbox.id;
+      const deviceRef = doc(db, "devices", deviceId);
+      const deviceSnapshot = await getDoc(deviceRef);
+
+      if (deviceSnapshot.exists()) {
+        const deviceData = deviceSnapshot.data();
+        groupDevices.push({
+          id: deviceId,
+          name: deviceData.deviceName || "Unnamed Device", // Store device name
+        });
+      }
+    }
+
     const groupRef = doc(collection(db, "deviceGroups"));
     await setDoc(groupRef, {
       groupName,
-      devices: groupDevices,
+      devices: groupDevices, // Store device details (names and IDs)
       createdBy: adminUID,
       createdAt: new Date().toISOString(),
     });
