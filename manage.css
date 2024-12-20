@@ -23,8 +23,6 @@ body {
   border-radius: 10px;
   overflow: hidden;
   padding: 20px;
-  height: 90vh; /* Adjust to fit the screen height */
-  overflow-y: hidden; /* Prevent the main container from scrolling */
 }
 
 /* Left Section */
@@ -56,11 +54,12 @@ body {
   background: #800020; /* Burgundy */
 }
 
+
+
 /* Right Section */
 .right-section {
   flex-grow: 1;
   padding: 20px;
-  overflow-y: auto; /* Enable scrolling for the right section */
 }
 
 .section-title {
@@ -74,8 +73,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
-  max-height: 40vh; /* Limit the height for scrolling */
-  overflow-y: auto; /* Enable scroll for the device grid */
 }
 
 .device-card {
@@ -87,6 +84,7 @@ body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
+
 
 .device-card:hover {
   transform: translateY(-5px);
@@ -125,8 +123,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
   gap: 20px;
-  max-height: 40vh; /* Limit the height for scrolling */
-  overflow-y: auto; /* Enable scroll for the groups grid */
+  margin-top: 20px;
 }
 
 .group-card {
@@ -155,7 +152,6 @@ body {
   color: #800020; /* Burgundy */
   margin-bottom: 15px;
 }
-
 .group-card button {
   background: #800020; /* Burgundy */
   color: #f5f5dc; /* Cream */
@@ -170,6 +166,10 @@ body {
 .group-card button:hover {
   background: #5A0014; /* Darker Burgundy */
 }
+
+
+
+
 
 /* Popup */
 .popup {
@@ -186,6 +186,139 @@ body {
   max-height: 80%; /* Restrict the height for scrolling */
   overflow-y: auto; /* Enable scrolling */
   z-index: 1000;
+}
+
+.popup-content h3 {
+  font-size: 1.5rem;
+  color: #800020; /* Burgundy */
+  margin-bottom: 20px;
+}
+
+.popup-content label {
+  font-size: 0.9rem;
+  color: #800020; /* Burgundy */
+  margin-bottom: 2px;
+  display: block;
+}
+
+.popup-content input,
+.popup-content select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #800020;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  background: #F5F5DC; /* Cream */
+  color: #800020; /* Burgundy */
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-btn {
+  background: #800020; /* Burgundy */
+  color: #F5F5DC; /* Cream */
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.modal-btn:hover {
+  background: #5A0014; /* Darker Burgundy */
+}
+
+.close-btn {
+  background: #5A0014; /* Darker Burgundy */
+  color: #F5F5DC; /* Cream */
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.close-btn:hover {
+  background: #800020; /* Burgundy */
+}
+/* Device Details */
+#device-details {
+  background: #ddc8c8;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#device-details p {
+  margin: 5px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+#device-details p strong {
+  color: #800020; /* Burgundy */
+}
+
+#device-details p em {
+  color: #555;
+  font-style: italic;
+}
+
+#device-details p span {
+  font-weight: bold;
+  color: green;
+}
+
+#device-details p span.offline {
+  color: red;
+}
+
+/* Media List */
+.media-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 10px;
+  list-style: none;
+  margin: 0;
+  justify-content: center;
+}
+
+.media-list .media-item {
+  width: 100px; /* Set the width of the box */
+  height: 100px; /* Set the height of the box */
+  background: #f5f5dc; /* Light background for contrast */
+  border: 1px solid #800020; /* Burgundy border */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.media-list .media-item img,
+.media-list .media-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures proper scaling */
+}
+
+.media-list .media-item:hover {
+  transform: translateY(-5px); /* Adds a hover effect */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Responsive Adjustments */
@@ -205,4 +338,4 @@ body {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-}
+} 
