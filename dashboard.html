@@ -10,54 +10,51 @@
   <div class="main-container">
     <!-- Left Section -->
     <div class="left-section">
-      <div class="welcome-card">
-        <img src="./images/logo1.png" alt="Logo" class="logo">
-        <p class="welcome-text">WELCOME <span id="username">USER</span></p>
-      </div>
-      <div class="menu">
+      <!-- Welcome Card -->
+      <section class="welcome-card">
+        <img src="./images/logo1.png" alt="Company Logo" class="logo">
+        <p class="welcome-text">WELCOME, <span id="username">USER</span>!</p>
+      </section>
+
+      <!-- Menu Section -->
+      <nav class="menu">
         <a href="manage.html">
-          <button class="menu-button">MANAGE SCREEN</button>
+          <button class="menu-button" aria-label="Manage Screen">MANAGE SCREEN</button>
         </a>
         <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer">
-          <button class="menu-button">FAQ</button>
+          <button class="menu-button" aria-label="Frequently Asked Questions">FAQ</button>
         </a>
-        <a href="https://www.chesney.in" target="_blank">
-          <button class="menu-button">CONTACT US</button>
+        <a href="https://www.chesney.in" target="_blank" rel="noopener noreferrer">
+          <button class="menu-button" aria-label="Contact Us">CONTACT US</button>
         </a>
-        <button id="logout-btn" class="menu-button">LOG OUT</button>
-      </div>
+        <button id="logout-btn" class="menu-button" aria-label="Log Out">LOG OUT</button>
+      </nav>
     </div>
 
     <!-- Right Section -->
     <div class="right-section">
-      <!-- Display User Info -->
-      <div class="form-card">
-        <div class="form-group">
-          <label for="name">NAME</label>
-          <input type="text" id="name" placeholder="Enter your name" readonly>
+      <!-- User Info Card -->
+      <section class="info-card">
+        <h1>Hello, <span id="display-name">User</span>!</h1>
+        <p>We’re glad to have you here. Here’s your account information:</p>
+        <div class="user-details">
+          <div class="detail">
+            <strong>Name:</strong>
+            <span id="name">User Name</span>
+          </div>
+          <div class="detail">
+            <strong>Email:</strong>
+            <span id="email">user@example.com</span>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="email">LOGIN EMAIL</label>
-          <input type="text" id="email" placeholder="Enter your email" readonly>
-        </div>
-      </div>
-
-      <!-- Reset Password Section -->
-      <div class="form-card">
-        <h3>Reset Password</h3>
-        <div class="form-group">
-          <label for="reset-email">EMAIL</label>
-          <input type="email" id="reset-email" placeholder="Enter your email">
-        </div>
-        <button id="send-reset-email-btn" class="menu-button">SEND RESET EMAIL</button>
-      </div>
+      </section>
     </div>
   </div>
 
   <!-- Firebase and JavaScript -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
     // Firebase configuration
     const firebaseConfig = {
@@ -74,28 +71,16 @@
     const auth = getAuth();
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Check for password reset success via query parameter
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("reset")) {
-        const resetSuccess = urlParams.get("reset");
-
-        if (resetSuccess === "true") {
-          alert("Password successfully changed! You can now log in using your new password.");
-          // Remove query parameter from the URL
-          window.history.replaceState(null, null, window.location.pathname);
-        }
-      }
-
-      // Display user info
       onAuthStateChanged(auth, (user) => {
         if (user) {
           const displayName = user.displayName || user.email.split('@')[0];
           const email = user.email;
 
-          // Populate user details
+          // Populate user details dynamically
           document.getElementById('username').textContent = displayName.toUpperCase();
-          document.getElementById('name').value = displayName;
-          document.getElementById('email').value = email;
+          document.getElementById('display-name').textContent = displayName;
+          document.getElementById('name').textContent = displayName;
+          document.getElementById('email').textContent = email;
         } else {
           // Redirect to login page if user is not logged in
           window.location.href = "login.html";
@@ -111,28 +96,6 @@
           } catch (error) {
             alert("Failed to log out. Please try again.");
           }
-        }
-      });
-
-      // Send Password Reset Email functionality
-      const sendResetEmailButton = document.getElementById("send-reset-email-btn");
-      sendResetEmailButton.addEventListener("click", async () => {
-        const email = document.getElementById("reset-email").value;
-        if (!email) {
-          alert("Please enter your email.");
-          return;
-        }
-
-        const actionCodeSettings = {
-          url: "https://yourdomain.com/dashboard.html?reset=true", // Replace with your actual domain
-          handleCodeInApp: false,
-        };
-
-        try {
-          await sendPasswordResetEmail(auth, email, actionCodeSettings);
-          alert("Password reset email sent. Please check your inbox.");
-        } catch (error) {
-          alert("Error sending password reset email: " + error.message);
         }
       });
     });
