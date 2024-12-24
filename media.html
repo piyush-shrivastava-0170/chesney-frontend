@@ -177,25 +177,37 @@
         const mediaRef = collection(db, "users", userId, "media");
         const mediaSnapshot = await getDocs(mediaRef);
 
-        mediaSnapshot.forEach((doc) => {
+        mediaSnapshot.forEach(async (doc) => {
           const mediaData = doc.data();
           const mediaItem = document.createElement("div");
           mediaItem.classList.add("media-item");
 
-          const isImage = mediaData.mediaType && mediaData.mediaType.startsWith("image");
-          mediaItem.innerHTML = `
-            ${isImage ? `<img src="${mediaData.mediaUrl}" alt="Media" class="media-thumbnail" />` : 
-              `<video src="${mediaData.mediaUrl}" class="media-thumbnail" controls></video>`}
-            <div class="media-actions">
-              <input type="checkbox" class="select-media-checkbox" data-id="${doc.id}" data-url="${mediaData.mediaUrl}" />
-            </div>
-          `;
+          try {
+            const mediaRef = ref(storage, mediaData.mediaUrl);
+            await getDownloadURL(mediaRef); // Check if file exists in storage
 
-          mediaItem.querySelector(".select-media-checkbox").addEventListener("change", (e) => {
-            toggleMediaSelection(mediaData.mediaUrl, e.target.checked);
-          });
+            const isImage = mediaData.mediaType && mediaData.mediaType.startsWith("image");
+            mediaItem.innerHTML = `
+              ${isImage ? `<img src="${mediaData.mediaUrl}" alt="Media" class="media-thumbnail" />` : 
+                `<video src="${mediaData.mediaUrl}" class="media-thumbnail" controls></video>`}
+              <div class="media-actions">
+                <input type="checkbox" class="select-media-checkbox" data-id="${doc.id}" data-url="${mediaData.mediaUrl}" />
+              </div>
+            `;
 
-          mediaGrid.appendChild(mediaItem);
+            mediaItem.querySelector(".select-media-checkbox").addEventListener("change", (e) => {
+              toggleMediaSelection(mediaData.mediaUrl, e.target.checked);
+            });
+
+            mediaGrid.appendChild(mediaItem);
+          } catch (error) {
+            if (error.code === "storage/object-not-found") {
+              // Delete the document from Firestore if file does not exist in storage
+              await deleteDoc(doc.ref);
+            } else {
+              console.error("Error verifying media file existence:", error);
+            }
+          }
         });
       }
 
@@ -279,6 +291,86 @@
 
         alert("Selected media added to existing playlists.");
         closeModal();
+      });
+
+      deleteSelectedMediaBtn.addEventListener("click", async () => {
+        if (selectedMediaUrls.length === 0) {
+          alert("Please select at least one media item to delete.");
+          return;
+        }
+
+        for (const mediaUrl of selectedMediaUrls) {
+          try {
+            // Delete the file from Firebase Storage
+            const mediaRef = ref(storage, mediaUrl);
+            await deleteObject(mediaRef);
+
+            // Delete the document from Firestore
+            const mediaDocQuery = query(collection(db, "users", userId, "media"), where("mediaUrl", "==", mediaUrl));
+            const mediaDocSnapshot = await getDocs(mediaDocQuery);
+
+            for (const docSnapshot of mediaDocSnapshot.docs) {
+              await deleteDoc(docSnapshot.ref);
+            }
+
+            console.log(`Deleted media: ${mediaUrl}`);
+          } catch (error) {
+            console.error("Error deleting media:", error);
+            alert(`Failed to delete media: ${mediaUrl}. Error: ${error.message}`);
+          }
+        }
+
+        alert("Selected media deleted successfully.");
+        selectedMediaUrls = []; // Clear selected media array
+        loadMedia(userId); // Reload media
+      });
+
+      addMediaBtn.addEventListener("click", () => {
+        fileUploadInput.click();
+      });
+
+      fileUploadInput.addEventListener("change", async (event) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) {
+          alert("No files selected.");
+          return;
+        }
+
+        uploadOverlay.style.display = "flex";
+
+        for (const file of files) {
+          try {
+            const storageRef = ref(storage, `users/${userId}/media/${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            await new Promise((resolve, reject) => {
+              uploadTask.on(
+                "state_changed",
+                null,
+                (error) => reject(error),
+                async () => {
+                  const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                  const mediaType = file.type;
+
+                  const mediaRef = collection(db, "users", userId, "media");
+                  await addDoc(mediaRef, {
+                    mediaUrl: downloadURL,
+                    mediaType: mediaType,
+                    uploadedAt: new Date().toISOString(),
+                  });
+
+                  resolve();
+                }
+              );
+            });
+          } catch (error) {
+            console.error("File upload failed:", error);
+            alert(`Failed to upload ${file.name}: ${error.message}`);
+          }
+        }
+
+        uploadOverlay.style.display = "none";
+        loadMedia(userId);
       });
 
       closeModalBtn.addEventListener("click", closeModal);
