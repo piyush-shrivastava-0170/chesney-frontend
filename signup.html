@@ -17,9 +17,9 @@
       color: black;
       border: none;
       border-radius: 20px;
-      padding: 5px 12px; /* Reduced padding */
-      height: 45px; /* Fixed height */
-      font-size: 0.9rem; /* Adjust font size if needed */
+      padding: 5px 12px;
+      height: 45px;
+      font-size: 0.9rem;
       font-weight: bold;
       text-align: center;
       cursor: pointer;
@@ -42,7 +42,7 @@
       text-align: center;
       font-size: 1rem;
       font-weight: bold;
-      margin: 10px 0; /* Adds space above and below the OR text */
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -85,9 +85,9 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-  
+
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
@@ -97,7 +97,7 @@
       messagingSenderId: "731368175146",
       appId: "1:731368175146:web:b2fd024d600c930373f553",
     };
-  
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
@@ -126,44 +126,50 @@
     });
 
     // Form submission handler
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-  
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-  
-      try {
-        // Create user with email and password
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-  
-        // Send email verification
-        try {
-          await sendEmailVerification(user);
-          console.log("Verification email sent to:", email);
-          alert("Sign-Up successful! A verification email has been sent to your email address.");
-        } catch (verificationError) {
-          console.error("Error sending verification email:", verificationError);
-          alert("Failed to send verification email. Please try again.");
-          return; // Stop further execution if email verification fails
+document.getElementById('signup-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    // Create user with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Send email verification
+    try {
+      await sendEmailVerification(user);
+      console.log("Verification email sent to:", email);
+      alert("Sign-Up successful! A verification email has been sent to your email address. Please verify your email to proceed.");
+
+      // Save user to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        email: email,
+        createdAt: Timestamp.now(),
+      });
+
+      // Monitor email verification status
+      const checkEmailVerification = setInterval(async () => {
+        await user.reload(); // Refresh the user's state
+        if (user.emailVerified) {
+          clearInterval(checkEmailVerification); // Stop checking
+          console.log("Email verified. Redirecting to login page.");
+          alert("Your email has been verified. Please log in.");
+          window.location.href = 'login.html'; // Redirect after verification
         }
-  
-        // Save user to Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          name: name,
-          email: email,
-          createdAt: Timestamp.now(),
-        });
-  
-        // Redirect to login
-        window.location.href = 'login.html';
-      } catch (error) {
-        console.error("Sign-Up error:", error);
-        alert("Sign-Up failed: " + error.message);
-      }
-    });
-  </script>
-  
+      }, 3000); // Check every 3 seconds
+    } catch (verificationError) {
+      console.error("Error sending verification email:", verificationError);
+      alert("Failed to send verification email. Please try again.");
+    }
+  } catch (error) {
+    console.error("Sign-Up error:", error);
+    alert("Sign-Up failed: " + error.message);
+  }
+});
+</script>
 </body>
 </html>
