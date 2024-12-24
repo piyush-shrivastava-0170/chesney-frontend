@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Playlist Management</title>
   <link rel="stylesheet" href="playlist.css">
+  
 </head>
 <body>
   <div class="main-container">
@@ -33,12 +34,13 @@
         <span id="close-view-popup" class="close-modal">&times;</span>
         <h3>Media in Playlist</h3>
         <div id="media-view-grid" class="media-view-grid"></div>
+        <button id="delete-selected-media" class="delete-button">Delete Selected</button>
       </div>
     </div>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-      import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+      import { getFirestore, collection, getDocs, doc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
       import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
       const firebaseConfig = {
@@ -61,6 +63,10 @@
         const mediaViewPopup = document.getElementById('media-view-popup');
         const mediaViewGrid = document.getElementById('media-view-grid');
         const closeViewPopupBtn = document.getElementById('close-view-popup');
+        const deleteSelectedMediaBtn = document.getElementById('delete-selected-media');
+
+        let selectedMediaUrls = [];
+        let currentPlaylistId = null;
 
         onAuthStateChanged(auth, (user) => {
           if (user) {
@@ -83,7 +89,7 @@
             playlistBox.classList.add('playlist-box');
             playlistBox.innerHTML = `
               <h4>${playlistData.name}</h4>
-              <p>${playlistData.media?.length || 0} Items</p>
+              <p class="item-count" data-id="${doc.id}">${playlistData.media?.length || 0} Items</p>
               <button class="view-playlist-btn" data-id="${doc.id}">View</button>
               <button class="delete-playlist-btn" data-id="${doc.id}">Delete</button>
             `;
@@ -94,23 +100,77 @@
         }
 
         async function viewPlaylist(playlistId) {
+          currentPlaylistId = playlistId;
           const playlistRef = doc(db, 'users', userId, 'playlists', playlistId);
           const playlistSnap = await getDoc(playlistRef);
           const playlistData = playlistSnap.data();
 
           mediaViewGrid.innerHTML = '';
+          selectedMediaUrls = [];
+
           if (playlistData.media?.length > 0) {
             playlistData.media.forEach((mediaUrl) => {
               const mediaItem = document.createElement('div');
               mediaItem.classList.add('media-view-item');
-              mediaItem.innerHTML = `<img src="${mediaUrl}" alt="Media in Playlist" />`;
+              mediaItem.innerHTML = `
+                <input type="checkbox" class="select-media-checkbox" data-url="${mediaUrl}" />
+                <img src="${mediaUrl}" alt="Media in Playlist" />
+              `;
               mediaViewGrid.appendChild(mediaItem);
+            });
+
+            document.querySelectorAll('.select-media-checkbox').forEach((checkbox) => {
+              checkbox.addEventListener('change', (e) => {
+                const mediaUrl = e.target.dataset.url;
+                if (e.target.checked) {
+                  selectedMediaUrls.push(mediaUrl);
+                } else {
+                  selectedMediaUrls = selectedMediaUrls.filter((url) => url !== mediaUrl);
+                }
+              });
             });
           } else {
             mediaViewGrid.innerHTML = '<p>No media in this playlist.</p>';
           }
+
           mediaViewPopup.style.display = 'block';
         }
+
+        async function deleteSelectedMedia() {
+          if (selectedMediaUrls.length === 0) {
+            alert('Please select at least one media item to delete.');
+            return;
+          }
+
+          const confirmDelete = confirm('Are you sure you want to delete the selected media items?');
+          if (!confirmDelete) return;
+
+          const playlistRef = doc(db, 'users', userId, 'playlists', currentPlaylistId);
+
+          try {
+            const playlistSnap = await getDoc(playlistRef);
+            const playlistData = playlistSnap.data();
+
+            if (playlistData && playlistData.media) {
+              const updatedMedia = playlistData.media.filter((url) => !selectedMediaUrls.includes(url));
+              await updateDoc(playlistRef, { media: updatedMedia });
+
+              // Update the media count in the UI
+              const itemCountElement = document.querySelector(`.item-count[data-id="${currentPlaylistId}"]`);
+              if (itemCountElement) {
+                itemCountElement.textContent = `${updatedMedia.length} Items`;
+              }
+
+              alert('Selected media items deleted from playlist.');
+              viewPlaylist(currentPlaylistId);
+            }
+          } catch (error) {
+            console.error('Error deleting selected media:', error);
+            alert('Failed to delete selected media. Please try again.');
+          }
+        }
+
+        deleteSelectedMediaBtn.addEventListener('click', deleteSelectedMedia);
 
         async function deletePlaylist(playlistId, playlistName) {
           const confirmDelete = confirm(`Are you sure you want to delete the playlist "${playlistName}"?`);
@@ -134,49 +194,6 @@
           }
         });
       });
-
-      async function createGroup() {
-    console.log("Create Group function triggered.");
-
-    const selectedDevices = Array.from(document.querySelectorAll("#devices-list input[type='checkbox']:checked"))
-        .map((checkbox) => checkbox.value);
-    console.log("Selected Devices:", selectedDevices);
-
-    if (selectedDevices.length === 0) {
-        alert("Please select at least one device to create a group.");
-        return;
-    }
-
-    const groupNameInput = document.getElementById("groupNameInput");
-    const groupName = groupNameInput.value.trim();
-    console.log("Group Name:", groupName);
-
-    if (!groupName) {
-        alert("Group name is required.");
-        return;
-    }
-
-    const groupId = `group_${Date.now()}`;
-    const groupData = {
-        name: groupName,
-        devices: selectedDevices,
-        createdAt: Timestamp.now(),
-    };
-
-    console.log("Group Data to Save:", groupData);
-
-    try {
-        const groupRef = doc(db, `users/${userId}/deviceGroups/${groupId}`);
-        await setDoc(groupRef, groupData);
-
-        alert("Group created successfully!");
-        closeGroupModal();
-        loadGroups(userId);
-    } catch (error) {
-        console.error("Error creating group:", error);
-        alert("Failed to create group. Please try again.");
-    }
-}
 
     </script>
   </div>
