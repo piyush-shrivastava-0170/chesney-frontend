@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Password</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #800020, #f5f5e9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #800020;
+      border-radius: 10px;
+      padding: 20px;
+      width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .container h2 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4d0d1d;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .container button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #f5f5e9;
+      color: #800020;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container button:hover {
+      background-color: #f0e8d9;
+    }
+
+    .success-message, .error-message {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      text-align: center;
+      display: none;
+    }
+
+    .success-message {
+      color: #28a745;
+      background: #f5f5e9;
+    }
+
+    .error-message {
+      color: #f5f5e9;
+      background: #b30000;
+    }
+
+    .back-to-login {
+      margin-top: 20px;
+    }
+
+    .back-to-login a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      background-color: #800020;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: 2px solid #f5f5e9;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .back-to-login a:hover {
+      background-color: #f0e8d9;
+      color: #800020;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="title">Reset Password</h2>
+    <form id="email-form">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <button type="submit">Send Verification Link</button>
+    </form>
+    <div id="new-password-section" style="display: none;">
+      <input type="password" id="new-password" placeholder="Enter new password" required>
+      <button id="confirm-button">Confirm</button>
+    </div>
+    <div id="success-message" class="success-message"></div>
+    <div id="error-message" class="error-message"></div>
+    <div id="back-to-login" class="back-to-login">
+      <a href="login.html">Back to Login</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail, confirmPasswordReset, verifyPasswordResetCode } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5WjXzmGNUWUCr-_-PDPagpUfYaTmjjGY",
+      authDomain: "cheney-25352.firebaseapp.com",
+      projectId: "cheney-25352",
+      storageBucket: "cheney-25352.appspot.com",
+      messagingSenderId: "731368175146",
+      appId: "1:731368175146:web:b2fd024d600c930373f553",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const emailForm = document.getElementById('email-form');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    const newPasswordSection = document.getElementById('new-password-section');
+    const title = document.getElementById('title');
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const oobCode = urlParams.get('oobCode');
+
+    // Email form submission
+    emailForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+
+      try {
+        await sendPasswordResetEmail(auth, email, {
+          url: 'http://localhost:5500/reset.html',
+        });
+        successMessage.textContent = 'Verification link sent to your email.';
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+      } catch (error) {
+        errorMessage.textContent = `Error: ${error.message}`;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+      }
+    });
+
+    // Handle password reset via oobCode
+    if (oobCode) {
+      emailForm.style.display = 'none';
+      title.textContent = 'Set New Password';
+      newPasswordSection.style.display = 'block';
+
+      document.getElementById('confirm-button').addEventListener('click', async () => {
+        const newPassword = document.getElementById('new-password').value;
+
+        try {
+          await confirmPasswordReset(auth, oobCode, newPassword);
+          successMessage.textContent = 'Password successfully changed!';
+          successMessage.style.display = 'block';
+          errorMessage.style.display = 'none';
+        } catch (error) {
+          errorMessage.textContent = `Error: ${error.message}`;
+          errorMessage.style.display = 'block';
+          successMessage.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

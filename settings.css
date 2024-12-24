@@ -1,0 +1,108 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #800020, #f5f5e9);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Container */
+  .settings-container {
+    background: #800020;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Header */
+  .settings-container h2 {
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  /* Input Fields */
+  .settings-container .input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4d0d1d;
+    color: white;
+    font-size: 1rem;
+  }
+  
+  .settings-container .input::placeholder {
+    color: #ddd;
+  }
+  
+  .settings-container .input:focus {
+    outline: none;
+    background-color: #5e1328;
+    color: white;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Buttons */
+  .settings-container .button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #f5f5e9;
+    color: #800020;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .settings-container .button:hover {
+    background: #f0e8d9;
+  }
+  
+  /* Success and Error Messages */
+  .settings-container .success-message,
+  .settings-container .error-message {
+    padding: 10px;
+    margin-top: -10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  
+  .settings-container .success-message {
+    color: white;
+    background: #28a745;
+    display: none;
+  }
+  
+  .settings-container .error-message {
+    color: white;
+    background: #b30000;
+    display: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 480px) {
+    .settings-container {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    .settings-container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .settings-container .button {
+      font-size: 0.9rem;
+    }
+  }
+  
