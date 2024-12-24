@@ -44,6 +44,22 @@
       font-weight: bold;
       margin: 10px 0;
     }
+
+    .login-text {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 15px;
+    }
+
+    .login-text a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-text a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -69,6 +85,15 @@
         <input type="text" id="name" placeholder="NAME" class="input red-input" required>
         <input type="email" id="email" placeholder="EMAIL" class="input red-input" required>
         <input 
+          type="tel" 
+          id="phone" 
+          placeholder="PHONE NUMBER" 
+          class="input red-input" 
+          required
+          pattern="[0-9]{10}" 
+          title="Phone number must be 10 digits long."
+        >
+        <input 
           type="password" 
           id="password"
           placeholder="PASSWORD" 
@@ -79,6 +104,10 @@
         >
         <button type="submit" class="button white-button">SIGN UP</button>
       </form>
+      <!-- Already have an account? -->
+      <p class="login-text">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
       <p class="website">WWW.CHESNEY.IN</p>
     </div>
   </div>
@@ -126,50 +155,52 @@
     });
 
     // Form submission handler
-document.getElementById('signup-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const phone = document.getElementById('phone').value;
 
-  try {
-    // Create user with email and password
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+      try {
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-    // Send email verification
-    try {
-      await sendEmailVerification(user);
-      console.log("Verification email sent to:", email);
-      alert("Sign-Up successful! A verification email has been sent to your email address. Please verify your email to proceed.");
+        // Send email verification
+        try {
+          await sendEmailVerification(user);
+          console.log("Verification email sent to:", email);
+          alert("Sign-Up successful! A verification email has been sent to your email address. Please verify your email to proceed.");
 
-      // Save user to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        email: email,
-        createdAt: Timestamp.now(),
-      });
+          // Save user to Firestore
+          await setDoc(doc(db, "users", user.uid), {
+            name: name,
+            email: email,
+            phone: phone,
+            createdAt: Timestamp.now(),
+          });
 
-      // Monitor email verification status
-      const checkEmailVerification = setInterval(async () => {
-        await user.reload(); // Refresh the user's state
-        if (user.emailVerified) {
-          clearInterval(checkEmailVerification); // Stop checking
-          console.log("Email verified. Redirecting to login page.");
-          alert("Your email has been verified. Please log in.");
-          window.location.href = 'login.html'; // Redirect after verification
+          // Monitor email verification status
+          const checkEmailVerification = setInterval(async () => {
+            await user.reload(); // Refresh the user's state
+            if (user.emailVerified) {
+              clearInterval(checkEmailVerification); // Stop checking
+              console.log("Email verified. Redirecting to login page.");
+              alert("Your email has been verified. Please log in.");
+              window.location.href = 'login.html'; // Redirect after verification
+            }
+          }, 3000); // Check every 3 seconds
+        } catch (verificationError) {
+          console.error("Error sending verification email:", verificationError);
+          alert("Failed to send verification email. Please try again.");
         }
-      }, 3000); // Check every 3 seconds
-    } catch (verificationError) {
-      console.error("Error sending verification email:", verificationError);
-      alert("Failed to send verification email. Please try again.");
-    }
-  } catch (error) {
-    console.error("Sign-Up error:", error);
-    alert("Sign-Up failed: " + error.message);
-  }
-});
-</script>
+      } catch (error) {
+        console.error("Sign-Up error:", error);
+        alert("Sign-Up failed: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
