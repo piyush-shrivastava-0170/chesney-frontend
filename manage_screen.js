@@ -121,7 +121,7 @@ function openGroupPopup(group, groupId) {
   document.getElementById("close-popup").onclick = () => closePopup(popup);
 }
 
-// Push Media to Group
+// Push Media to Group with Orientation
 function pushMediaToGroup(deviceIds) {
   const selectedMedia = document.querySelector(".media-item.selected");
   if (!selectedMedia) {
@@ -130,25 +130,29 @@ function pushMediaToGroup(deviceIds) {
   }
 
   const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
+  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
 
   deviceIds.forEach(async (deviceId) => {
     const deviceRef = doc(db, "devices", deviceId);
     await updateDoc(deviceRef, {
       currentMedia: [mediaUrl],
+      orientation: orientation, // Apply the orientation
       lastContentPush: serverTimestamp(),
     });
   });
 
-  alert("Media pushed to all devices in the group!");
+  alert("Media pushed to all devices in the group with orientation!");
 }
 
-// Push Playlist to Group
+// Push Playlist to Group with Orientation
 function pushPlaylistToGroup(deviceIds) {
   const selectedPlaylistId = document.getElementById("playlist-select").value;
   if (!selectedPlaylistId) {
     alert("Please select a playlist.");
     return;
   }
+
+  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
 
   deviceIds.forEach(async (deviceId) => {
     const deviceRef = doc(db, "devices", deviceId);
@@ -158,12 +162,13 @@ function pushPlaylistToGroup(deviceIds) {
     if (playlistDoc.exists()) {
       await updateDoc(deviceRef, {
         currentMedia: playlistDoc.data().media,
+        orientation: orientation, // Apply the orientation
         lastContentPush: serverTimestamp(),
       });
     }
   });
 
-  alert("Playlist pushed to all devices in the group!");
+  alert("Playlist pushed to all devices in the group with orientation!");
 }
 
 // Open Device Popup
@@ -174,13 +179,14 @@ function openDevicePopup(device, deviceId) {
   document.getElementById("device-name").textContent = device.deviceName || "Unnamed Device";
   document.getElementById("device-id").textContent = `Device ID: ${deviceId}`;
   document.getElementById("device-status").textContent = device.status || "Unknown";
+  document.getElementById("orientation-select").value = device.orientation || "landscape"; // Set current orientation
 
   loadMediaList();
   loadPlaylists();
 
   document.getElementById("push-media-btn").onclick = () => pushMedia(deviceId);
   document.getElementById("push-playlist-btn").onclick = () => pushPlaylist(deviceId);
-  document.getElementById("clear-restart-btn").onclick = () => clearAndRestart(deviceId); // Added Clear and Restart button
+  document.getElementById("clear-restart-btn").onclick = () => clearAndRestart(deviceId);
   document.getElementById("close-popup").onclick = () => closePopup(popup);
 }
 
@@ -220,7 +226,7 @@ async function clearAndRestartGroup(deviceIds) {
   }
 }
 
-// Push Media
+// Push Media with Orientation
 function pushMedia(deviceId) {
   const selectedMedia = document.querySelector(".media-item.selected");
   if (!selectedMedia) {
@@ -229,17 +235,19 @@ function pushMedia(deviceId) {
   }
 
   const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
+  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
   const deviceRef = doc(db, "devices", deviceId);
 
   updateDoc(deviceRef, {
     currentMedia: [mediaUrl],
+    orientation: orientation, // Apply the orientation
     lastContentPush: serverTimestamp(),
   })
-    .then(() => alert("Media pushed successfully!"))
+    .then(() => alert("Media pushed successfully with orientation!"))
     .catch((error) => console.error("Error pushing media:", error));
 }
 
-// Push Playlist
+// Push Playlist with Orientation
 function pushPlaylist(deviceId) {
   const selectedPlaylistId = document.getElementById("playlist-select").value;
   if (!selectedPlaylistId) {
@@ -247,6 +255,7 @@ function pushPlaylist(deviceId) {
     return;
   }
 
+  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
   const deviceRef = doc(db, "devices", deviceId);
   const playlistRef = doc(db, `users/${adminUID}/playlists`, selectedPlaylistId);
 
@@ -255,8 +264,9 @@ function pushPlaylist(deviceId) {
       if (playlistDoc.exists()) {
         updateDoc(deviceRef, {
           currentMedia: playlistDoc.data().media,
+          orientation: orientation, // Apply the orientation
           lastContentPush: serverTimestamp(),
-        }).then(() => alert("Playlist pushed successfully!"));
+        }).then(() => alert("Playlist pushed successfully with orientation!"));
       }
     })
     .catch((error) => console.error("Error pushing playlist:", error));
