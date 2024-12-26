@@ -121,7 +121,7 @@ function openGroupPopup(group, groupId) {
   document.getElementById("close-popup").onclick = () => closePopup(popup);
 }
 
-// Push Media to Group with Orientation, Resize Mode, and Delay
+// Push Media to Group with Orientation, Resize Mode, Delay, and Audio
 function pushMediaToGroup(deviceIds) {
   const selectedMedia = document.querySelector(".media-item.selected");
   if (!selectedMedia) {
@@ -130,25 +130,27 @@ function pushMediaToGroup(deviceIds) {
   }
 
   const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
-  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
-  const resizeMode = document.getElementById("resize-select").value; // Get selected resize mode
-  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10); // Get delay seconds
+  const orientation = document.getElementById("orientation-select").value;
+  const resizeMode = document.getElementById("resize-select").value;
+  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10);
+  const audio = document.getElementById("audio-select").value;
 
   deviceIds.forEach(async (deviceId) => {
     const deviceRef = doc(db, "devices", deviceId);
     await updateDoc(deviceRef, {
       currentMedia: [mediaUrl],
-      orientation: orientation, // Apply the orientation
-      resizeMode: resizeMode, // Apply the resize mode
-      delay: delaySeconds, // Apply the delay
+      orientation: orientation,
+      resizeMode: resizeMode,
+      delay: delaySeconds,
+      audio: audio,
       lastContentPush: serverTimestamp(),
     });
   });
 
-  alert("Media pushed to all devices in the group with orientation, resize mode, and delay!");
+  alert("Media pushed to all devices in the group with orientation, resize mode, delay, and audio settings!");
 }
 
-// Push Playlist to Group with Orientation, Resize Mode, and Delay
+// Push Playlist to Group with Orientation, Resize Mode, Delay, and Audio
 function pushPlaylistToGroup(deviceIds) {
   const selectedPlaylistId = document.getElementById("playlist-select").value;
   if (!selectedPlaylistId) {
@@ -156,9 +158,10 @@ function pushPlaylistToGroup(deviceIds) {
     return;
   }
 
-  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
-  const resizeMode = document.getElementById("resize-select").value; // Get selected resize mode
-  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10); // Get delay seconds
+  const orientation = document.getElementById("orientation-select").value;
+  const resizeMode = document.getElementById("resize-select").value;
+  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10);
+  const audio = document.getElementById("audio-select").value;
 
   deviceIds.forEach(async (deviceId) => {
     const deviceRef = doc(db, "devices", deviceId);
@@ -168,15 +171,16 @@ function pushPlaylistToGroup(deviceIds) {
     if (playlistDoc.exists()) {
       await updateDoc(deviceRef, {
         currentMedia: playlistDoc.data().media,
-        orientation: orientation, // Apply the orientation
-        resizeMode: resizeMode, // Apply the resize mode
-        delay: delaySeconds, // Apply the delay
+        orientation: orientation,
+        resizeMode: resizeMode,
+        delay: delaySeconds,
+        audio: audio,
         lastContentPush: serverTimestamp(),
       });
     }
   });
 
-  alert("Playlist pushed to all devices in the group with orientation, resize mode, and delay!");
+  alert("Playlist pushed to all devices in the group with orientation, resize mode, delay, and audio settings!");
 }
 
 // Open Device Popup
@@ -187,9 +191,10 @@ function openDevicePopup(device, deviceId) {
   document.getElementById("device-name").textContent = device.deviceName || "Unnamed Device";
   document.getElementById("device-id").textContent = `Device ID: ${deviceId}`;
   document.getElementById("device-status").textContent = device.status || "Unknown";
-  document.getElementById("orientation-select").value = device.orientation || "landscape"; // Set current orientation
-  document.getElementById("resize-select").value = device.resizeMode || "contain"; // Set current resize mode
-  document.getElementById("delay-input").value = device.delay || 5; // Set current delay
+  document.getElementById("orientation-select").value = device.orientation || "landscape";
+  document.getElementById("resize-select").value = device.resizeMode || "contain";
+  document.getElementById("delay-input").value = device.delay || 5;
+  document.getElementById("audio-select").value = device.audio || "mute";
 
   loadMediaList();
   loadPlaylists();
@@ -205,10 +210,10 @@ async function clearAndRestart(deviceId) {
   try {
     const deviceRef = doc(db, "devices", deviceId);
     await updateDoc(deviceRef, {
-      currentMedia: null, // Clear the current media
+      currentMedia: null,
       commands: {
-        clearContent: true, // Command to clear content
-        restartApp: true, // Command to restart the app
+        clearContent: true,
+        restartApp: true,
       },
     });
     alert("Media cleared and restart command sent!");
@@ -223,10 +228,10 @@ async function clearAndRestartGroup(deviceIds) {
     for (const deviceId of deviceIds) {
       const deviceRef = doc(db, "devices", deviceId);
       await updateDoc(deviceRef, {
-        currentMedia: null, // Clear the current media
+        currentMedia: null,
         commands: {
-          clearContent: true, // Command to clear content
-          restartApp: true, // Command to restart the app
+          clearContent: true,
+          restartApp: true,
         },
       });
     }
@@ -236,7 +241,7 @@ async function clearAndRestartGroup(deviceIds) {
   }
 }
 
-// Push Media with Orientation, Resize Mode, and Delay
+// Push Media with Orientation, Resize Mode, Delay, and Audio
 function pushMedia(deviceId) {
   const selectedMedia = document.querySelector(".media-item.selected");
   if (!selectedMedia) {
@@ -245,23 +250,25 @@ function pushMedia(deviceId) {
   }
 
   const mediaUrl = selectedMedia.querySelector(".select-media-btn").dataset.url;
-  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
-  const resizeMode = document.getElementById("resize-select").value; // Get selected resize mode
-  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10); // Get delay seconds
+  const orientation = document.getElementById("orientation-select").value;
+  const resizeMode = document.getElementById("resize-select").value;
+  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10);
+  const audio = document.getElementById("audio-select").value;
   const deviceRef = doc(db, "devices", deviceId);
 
   updateDoc(deviceRef, {
     currentMedia: [mediaUrl],
-    orientation: orientation, // Apply the orientation
-    resizeMode: resizeMode, // Apply the resize mode
-    delay: delaySeconds, // Apply the delay
+    orientation: orientation,
+    resizeMode: resizeMode,
+    delay: delaySeconds,
+    audio: audio,
     lastContentPush: serverTimestamp(),
   })
-    .then(() => alert("Media pushed successfully with orientation, resize mode, and delay!"))
+    .then(() => alert("Media pushed successfully with orientation, resize mode, delay, and audio settings!"))
     .catch((error) => console.error("Error pushing media:", error));
 }
 
-// Push Playlist with Orientation, Resize Mode, and Delay
+// Push Playlist with Orientation, Resize Mode, Delay, and Audio
 function pushPlaylist(deviceId) {
   const selectedPlaylistId = document.getElementById("playlist-select").value;
   if (!selectedPlaylistId) {
@@ -269,9 +276,10 @@ function pushPlaylist(deviceId) {
     return;
   }
 
-  const orientation = document.getElementById("orientation-select").value; // Get selected orientation
-  const resizeMode = document.getElementById("resize-select").value; // Get selected resize mode
-  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10); // Get delay seconds
+  const orientation = document.getElementById("orientation-select").value;
+  const resizeMode = document.getElementById("resize-select").value;
+  const delaySeconds = parseInt(document.getElementById("delay-input").value, 10);
+  const audio = document.getElementById("audio-select").value;
   const deviceRef = doc(db, "devices", deviceId);
   const playlistRef = doc(db, `users/${adminUID}/playlists`, selectedPlaylistId);
 
@@ -280,11 +288,12 @@ function pushPlaylist(deviceId) {
       if (playlistDoc.exists()) {
         updateDoc(deviceRef, {
           currentMedia: playlistDoc.data().media,
-          orientation: orientation, // Apply the orientation
-          resizeMode: resizeMode, // Apply the resize mode
-          delay: delaySeconds, // Apply the delay
+          orientation: orientation,
+          resizeMode: resizeMode,
+          delay: delaySeconds,
+          audio: audio,
           lastContentPush: serverTimestamp(),
-        }).then(() => alert("Playlist pushed successfully with orientation, resize mode, and delay!"));
+        }).then(() => alert("Playlist pushed successfully with orientation, resize mode, delay, and audio settings!"));
       }
     })
     .catch((error) => console.error("Error pushing playlist:", error));
