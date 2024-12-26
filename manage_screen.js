@@ -117,6 +117,7 @@ function openGroupPopup(group, groupId) {
 
   document.getElementById("push-media-btn").onclick = () => pushMediaToGroup(group.devices);
   document.getElementById("push-playlist-btn").onclick = () => pushPlaylistToGroup(group.devices);
+  document.getElementById("clear-restart-btn").onclick = () => clearAndRestartGroup(group.devices); // Added Clear and Restart button for group
   document.getElementById("close-popup").onclick = () => closePopup(popup);
 }
 
@@ -179,7 +180,44 @@ function openDevicePopup(device, deviceId) {
 
   document.getElementById("push-media-btn").onclick = () => pushMedia(deviceId);
   document.getElementById("push-playlist-btn").onclick = () => pushPlaylist(deviceId);
+  document.getElementById("clear-restart-btn").onclick = () => clearAndRestart(deviceId); // Added Clear and Restart button
   document.getElementById("close-popup").onclick = () => closePopup(popup);
+}
+
+// Clear and Restart Functionality
+async function clearAndRestart(deviceId) {
+  try {
+    const deviceRef = doc(db, "devices", deviceId);
+    await updateDoc(deviceRef, {
+      currentMedia: null, // Clear the current media
+      commands: {
+        clearContent: true, // Command to clear content
+        restartApp: true, // Command to restart the app
+      },
+    });
+    alert("Media cleared and restart command sent!");
+  } catch (error) {
+    console.error("Error clearing and restarting device:", error);
+  }
+}
+
+// Clear and Restart for Group
+async function clearAndRestartGroup(deviceIds) {
+  try {
+    for (const deviceId of deviceIds) {
+      const deviceRef = doc(db, "devices", deviceId);
+      await updateDoc(deviceRef, {
+        currentMedia: null, // Clear the current media
+        commands: {
+          clearContent: true, // Command to clear content
+          restartApp: true, // Command to restart the app
+        },
+      });
+    }
+    alert("Media cleared and restart command sent to all devices in the group!");
+  } catch (error) {
+    console.error("Error clearing and restarting group devices:", error);
+  }
 }
 
 // Push Media
