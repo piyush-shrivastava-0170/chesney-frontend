@@ -92,7 +92,7 @@ h2 {
 }
 
 .button.white-button {
-    width: 49%; /* Adjusted size */
+    width: 43%; /* Adjusted size */
     padding: 12px; /* Slightly increased padding */
     background: #f5f5dc; /* Cream */
     color: #800020; /* Burgundy Text */
@@ -108,34 +108,6 @@ h2 {
 
 .button.white-button:hover {
     background: #e8e4d6; /* Lighter Cream */
-}
-
-.google-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: #f5f5dc; /* Cream */
-    color: #4b0014; /* Burgundy */
-    border: none;
-    border-radius: 20px;
-    padding: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 100px; /* Matches the width of other buttons */
-    margin: 20px auto; /* Centers the button */
-}
-
-.google-button:hover {
-    background: #e8e4d6; /* Lighter Cream */
-}
-
-.google-icon {
-    width: 40px;
-    height: 40px;
 }
 
 .or-text {

@@ -36,17 +36,21 @@ body {
   background: linear-gradient(135deg, #f5f5dc, #e8e0c3); /* Cream Gradient */
   border-radius: 15px;
   padding: 20px 15px;
-  min-height: 620px;
+  min-height: 400px; /* Reduced height */
+  width: 350px; /* Constant width */
+  max-width: 90%; /* Prevents overflow on smaller screens */
   text-align: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   color: #800020; /* Burgundy */
   overflow: hidden;
   position: relative;
+  margin: auto; /* Centers the card horizontally */
 }
+
 
 .gallery-card img {
   width: 100%;
-  height: 430px;
+  height: 385px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;

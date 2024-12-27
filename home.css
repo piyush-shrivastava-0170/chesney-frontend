@@ -12,34 +12,6 @@ body {
   position: relative;
 }
 
-/* Logout Button */
-.logout-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.logout-btn {
-  background: #800020;
-  color: #F5F5DC;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s, transform 0.3s;
-}
-
-.logout-btn:hover {
-  background: #5a0014;
-  transform: translateY(-2px);
-}
-
-.logout-btn:active {
-  background: #40000e;
-}
 
 /* Dashboard Grid Layout */
 .dashboard-container {

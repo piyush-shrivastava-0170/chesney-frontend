@@ -9,34 +9,34 @@
   <style>
     /* Google Button Style */
     .google-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #f5f5dc !important;
-      color: black;
-      border: none;
-      border-radius: 20px;
-      padding: 5px 12px;
-      height: 45px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 50%;
-      margin: 20px auto;
-      transition: background 0.3s ease, transform 0.2s ease;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Adjusted spacing between logo and text */
+    background: #f5f5dc; /* Cream */
+    color: #4b0014; /* Burgundy */
+    border: none;
+    border-radius: 20px;
+    padding: 10px; /* Reduced padding for a smaller button */
+    font-size: 0.9rem; /* Slightly smaller font */
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 260px; /* Reduced button width */
+    margin: 20px auto; /* Centers the button */
+}
 
-    .google-button:hover {
-      background: #f0f0f0;
-    }
+.google-button:hover {
+    background: #e8e4d6; /* Lighter Cream */
+}
 
-    .google-icon {
-      width: 35px;
-      height: 35px;
-    }
+.google-icon {
+    width: 20px; /* Set a smaller fixed width for the logo */
+    height: 20px; /* Match the height for proportional scaling */
+    display: block; /* Ensure it doesn’t cause inline spacing issues */
+}
+
 
     .or-text {
       text-align: center;
@@ -47,12 +47,12 @@
 
     .login-text {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 1rem;
       margin-top: 15px;
     }
 
     .login-text a {
-      color: #007BFF;
+      color: #8fb976;
       text-decoration: none;
       font-weight: bold;
     }
@@ -76,7 +76,7 @@
       <h2>CREATE NEW ACCOUNT</h2>
       <!-- Google Signup Button -->
       <button class="google-button" id="google-signup">
-        <img src="./images/google-logo.avif" alt="Google Icon" class="google-icon">
+        <img src="./images/google-transparent.png" alt="Google Icon" class="google-icon">
         Sign Up with Google
       </button>
       <!-- OR Text -->

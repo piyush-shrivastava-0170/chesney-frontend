@@ -7,34 +7,34 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
   <style>
-    .google-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 20px;
-      padding: 12px;
-      font-size: 1rem;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 45%;
-      margin: 20px 0;
-      margin-left: 150px;
-    }
+     .google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Adjusted spacing between logo and text */
+    background: #f5f5dc; /* Cream */
+    color: #4b0014; /* Burgundy */
+    border: none;
+    border-radius: 20px;
+    padding: 10px; /* Reduced padding for a smaller button */
+    font-size: 0.9rem; /* Slightly smaller font */
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 250px; /* Reduced button width */
+    margin: 20px auto; /* Centers the button */
+}
 
-    .google-button:hover {
-      background: #f0f0f0;
-    }
+.google-button:hover {
+    background: #e8e4d6; /* Lighter Cream */
+}
 
-    .google-icon {
-      width: 20px;
-      height: 20px;
-    }
+.google-icon {
+    width: 15px; /* Set a smaller fixed width for the logo */
+    height: 15px; /* Match the height for proportional scaling */
+    display: block; /* Ensure it doesn’t cause inline spacing issues */
+}
 
     .or-text {
       text-align: center;
@@ -53,7 +53,7 @@
       display: block;
       text-align: center;
       margin-top: 10px;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     .forgot-password a {
@@ -82,7 +82,7 @@
 
       <!-- Google Signup Button -->
       <button class="google-button google-btn">
-        <img src="images/google-logo.avif" alt="Google Icon" class="google-icon">
+        <img src="images/google-transparent.png" alt="Google Icon" class="google-icon">
         Sign in with Google
       </button>
 
