@@ -7,6 +7,25 @@
   <link rel="stylesheet" href="connect.css">
 </head>
 <body>
+  <style>
+  /* Reduce gap between buttons */
+.connect-screen-box button {
+  background-color: #800020; /* Burgundy */
+  color: #F5F5DC; /* Cream */
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%; /* Full width of the form */
+  margin-top: 3px; /* Further reduced gap between buttons */
+}
+
+.connect-screen-box button:hover {
+  background-color: #5A0014; /* Darker Burgundy */
+}
+</style>
   <div class="main-container">
     <!-- Left Section -->
     <div class="left-section">
@@ -19,6 +38,8 @@
           <input type="text" id="device-id" placeholder="Enter Device ID" required />
           <button type="submit">Connect Device</button>
         </form>
+        <!-- Manage Screen Button -->
+        <button onclick="location.href='manage.html'" style="margin-top: 10px;">Manage Screen</button>
       </div>
     </div>
 
