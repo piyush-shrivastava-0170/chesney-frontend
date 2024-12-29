@@ -24,11 +24,13 @@ body {
 /* Left Section */
 .left-section {
   width: 30%;
+  height: 500px; /* Fixed height for the left box */
   background: #f5f5dc; /* Cream Background */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   color: #800020; /* Burgundy Text */
+  overflow-y: auto; /* Add vertical scroll */
 }
 
 .left-section h2 {
@@ -84,11 +86,15 @@ body {
 /* Right Section */
 .right-section {
   width: 65%;
+  height: 500px; /* Fixed height for the right box */
   background: #800020; /* Burgundy Background */
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   color: #f5f5dc; /* Cream Text */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Keeps buttons at the bottom */
 }
 
 .right-section h2 {
@@ -99,23 +105,46 @@ body {
 }
 
 .group-grid {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  overflow-y: auto; /* Make only groups scroll */
   margin-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .group-box {
   background: #f5f5dc; /* Cream Background */
   color: #800020; /* Burgundy Text */
-  padding: 15px;
+  padding: 5px; /* Smaller padding for reduced size */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: calc(50% - 10px);
+  width: calc(30% - 10px); /* Smaller width for groups */
+  height: 80px; /* Fixed smaller height for groups */
+  position: relative;
 }
 
-.create-group-button {
+.group-box input[type="checkbox"] {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  transform: scale(1.2);
+  accent-color: #800020;
+}
+
+/* Buttons Section */
+.right-section .buttons-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.create-group-button,
+.manage-screen-button,
+.delete-groups-button {
   background: #f5f5dc; /* Cream Background */
   color: #800020; /* Burgundy Text */
   border: none;
@@ -126,10 +155,13 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out;
-  width: 100%;
+  width: 32%; /* Increased width for each button */
+  text-align: center;
 }
 
-.create-group-button:hover {
+.create-group-button:hover,
+.manage-screen-button:hover,
+.delete-groups-button:hover {
   transform: scale(1.05);
   background: #e0d9c5; /* Slightly darker cream */
 }
@@ -142,9 +174,9 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   z-index: 1000;
 }
 
