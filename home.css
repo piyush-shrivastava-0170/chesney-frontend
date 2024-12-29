@@ -12,7 +12,6 @@ body {
   position: relative;
 }
 
-
 /* Dashboard Grid Layout */
 .dashboard-container {
   display: grid;
@@ -92,38 +91,88 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .dashboard-button {
+    height: 120px;
+    font-size: 1rem;
+    padding: 15px;
+  }
+
+  .welcome-card {
+    grid-column: span 2;
+    font-size: 2rem;
+    padding: 15px;
+  }
+
+  .welcome-text {
+    font-size: 2rem;
+  }
+
+  .welcome-card .logo {
+    width: 80px;
+    height: 80px;
+    margin-left: 150px;
+  }
+}
+
 @media (max-width: 768px) {
   .dashboard-container {
     grid-template-columns: repeat(2, 1fr);
   }
 
   .dashboard-button {
-    height: 130px;
-    font-size: 1rem;
+    height: 120px;
+    font-size: 0.95rem;
+    padding: 15px;
+  }
+
+  .welcome-card {
+    grid-column: span 2;
+    font-size: 1.8rem;
+    padding: 15px;
+  }
+
+  .welcome-card .logo {
+    width: 70px;
+    height: 70px;
   }
 
   .welcome-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-container {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .dashboard-button {
-    height: 120px;
+    height: 110px;
     font-size: 0.9rem;
-    padding: 15px;
+    padding: 12px;
+  }
+
+  .welcome-card {
+    grid-column: span 1;
+    font-size: 1.5rem;
+    padding: 10px;
   }
 
   .welcome-card .logo {
     width: 60px;
     height: 60px;
+    margin-left: 0; /* Centered logo for smaller screens */
   }
 
   .welcome-text {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+    text-align: center;
   }
 }

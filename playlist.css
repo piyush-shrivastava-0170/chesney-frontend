@@ -36,72 +36,68 @@ body {
 .playlist-card {
   background: #f5f5dc; /* Cream */
   border-radius: 15px;
-  padding: 20px; /* Add padding for inner spacing */
+  padding: 20px;
   text-align: center;
   width: 90%;
-  height: 490px; /* Adjusted height to accommodate buttons */
+  height: 490px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column; /* Stack content vertically */
-  align-items: center; /* Center-align content horizontally */
-  justify-content: flex-start; /* Align items to the top */
-  gap: 15px; /* Add spacing between elements */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
 }
 
-/* Playlist Image Styling */
 .playlist-image {
-  width: 250px; /* Adjust the width of the image */
-  height: 350px; /* Adjust the height of the image */
-  object-fit: cover; /* Ensures the image fits well within its container */
-  border-radius: 12px; /* Rounded corners for a clean look */
-  margin-bottom: 10px; /* Space between the image and the content below */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border: 2px solid #f5f5f5; /* Light border for a clean look */
+  width: 250px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f5f5f5;
 }
 
-/* Playlist Text Styling */
 .playlist-text {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #800020; /* Burgundy */
+  color: #800020;
   text-transform: uppercase;
-  margin-top: 10px; /* Space above the text */
+  margin-top: 10px;
 }
 
-/* Buttons Inside Playlist Card */
 .navigation-button {
-  display: block; /* Stack buttons vertically */
-  width: 90%; /* Button width relative to the card */
-  padding: 10px 15px; /* Add padding for better appearance */
-  margin: 5px auto; /* Center buttons horizontally */
-  background: #800020; /* Burgundy background */
-  color: #f5f5dc; /* Cream text */
+  display: block;
+  width: 90%;
+  padding: 10px 15px;
+  margin: 5px auto;
+  background: #800020;
+  color: #f5f5dc;
   border: none;
-  border-radius: 15px; /* Rounded corners for modern look */
-  font-size: 1rem; /* Consistent font size */
-  text-transform: uppercase; /* Uppercase text for emphasis */
+  border-radius: 15px;
+  font-size: 1rem;
+  text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: background 0.3s, transform 0.2s; /* Smooth hover effects */
+  transition: background 0.3s, transform 0.2s;
 }
 
 .navigation-button:hover {
-  background: #5a0014; /* Darker Burgundy on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  background: #5a0014;
+  transform: scale(1.05);
 }
-
 
 /* Right Section with Scroll */
 .red-box {
-  background: #800020; /* Burgundy */
+  background: #800020;
   flex-grow: 1;
   min-height: 500px;
-  max-height: 650px; /* Added max-height for better scrolling */
+  max-height: 650px;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 15px;
-  overflow-y: auto; /* Scroll when content overflows */
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -111,23 +107,23 @@ body {
 }
 
 .red-box::-webkit-scrollbar-track {
-  background: #5a0014; /* Dark Burgundy */
+  background: #5a0014;
   border-radius: 10px;
 }
 
 .red-box::-webkit-scrollbar-thumb {
-  background: #f5f5dc; /* Cream */
+  background: #f5f5dc;
   border-radius: 10px;
 }
 
 .red-box::-webkit-scrollbar-thumb:hover {
-  background: #e8e0c3; /* Light Cream */
+  background: #e8e0c3;
 }
 
 .red-box h3 {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #f5f5dc; /* Cream */
+  color: #f5f5dc;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -141,11 +137,11 @@ body {
 }
 
 .playlist-box {
-  background: #f5f5dc; /* Cream */
+  background: #f5f5dc;
   border-radius: 10px;
   padding: 10px;
-  width: 140px; /* Adjusted box size */
-  height: 180px; /* Proportional height */
+  width: 140px;
+  height: 180px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -163,19 +159,19 @@ body {
 .playlist-box h4 {
   font-size: 1rem;
   font-weight: bold;
-  color: #800020; /* Burgundy */
+  color: #800020;
   margin: 0;
 }
 
 .playlist-box p {
   font-size: 0.8rem;
-  color: #5a0014; /* Dark Burgundy */
+  color: #5a0014;
   margin: 5px 0;
 }
 
 .playlist-box button {
-  background: #800020; /* Burgundy */
-  color: #f5f5dc; /* Cream */
+  background: #800020;
+  color: #f5f5dc;
   border: none;
   padding: 5px 10px;
   font-size: 0.8rem;
@@ -185,7 +181,7 @@ body {
 }
 
 .playlist-box button:hover {
-  background: #5a0014; /* Dark Burgundy */
+  background: #5a0014;
 }
 
 /* Media View Grid */
@@ -197,10 +193,10 @@ body {
 }
 
 .media-view-item {
-  background: #f5f5dc; /* Cream */
+  background: #f5f5dc;
   border-radius: 10px;
   padding: 5px;
-  width: 120px; /* Smaller box for better fit */
+  width: 120px;
   height: 120px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -214,8 +210,8 @@ body {
 
 /* Playlist Button */
 .playlist-button {
-  background: #f5f5dc; /* Cream */
-  color: #800020; /* Burgundy */
+  background: #f5f5dc;
+  color: #800020;
   border: none;
   padding: 10px;
   font-size: 1rem;
@@ -230,7 +226,7 @@ body {
 }
 
 .playlist-button:hover {
-  background: #e8e0c3; /* Light Cream */
+  background: #e8e0c3;
   transform: scale(1.03);
 }
 
@@ -249,7 +245,7 @@ body {
 }
 
 .modal-content {
-  background: #f5f5dc; /* Cream */
+  background: #f5f5dc;
   border-radius: 12px;
   padding: 15px;
   width: 90%;
@@ -260,7 +256,7 @@ body {
 
 .modal-content h3 {
   font-size: 1.3rem;
-  color: #800020; /* Burgundy */
+  color: #800020;
 }
 
 .modal-content input {
@@ -272,7 +268,7 @@ body {
 }
 
 .modal-content button {
-  background: #800020; /* Burgundy */
+  background: #800020;
   color: #f5f5dc;
   border: none;
   padding: 10px;
@@ -284,7 +280,7 @@ body {
 }
 
 .modal-content button:hover {
-  background: #5a0014; /* Dark Burgundy */
+  background: #5a0014;
 }
 
 .close-modal {
@@ -298,4 +294,100 @@ body {
 
 .close-modal:hover {
   color: #5a0014;
+}
+
+/* Remove the "Delete Selected" Button */
+button.delete-selected {
+  display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-section,
+  .playlist-card {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .playlist-image {
+    width: 200px;
+    height: 300px;
+  }
+
+  .red-box {
+    padding: 30px;
+  }
+
+  .playlist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    gap: 15px;
+  }
+
+  .playlist-card {
+    width: 90%;
+  }
+
+  .playlist-image {
+    width: 180px;
+    height: 250px;
+  }
+
+  .red-box {
+    padding: 20px;
+  }
+
+  .playlist-grid {
+    gap: 10px;
+  }
+
+  .playlist-box {
+    width: 120px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 10px;
+  }
+
+  .playlist-card {
+    width: 100%;
+  }
+
+  .playlist-image {
+    width: 150px;
+    height: 200px;
+  }
+
+  .red-box {
+    padding: 15px;
+  }
+
+  .playlist-grid {
+    gap: 8px;
+  }
+
+  .playlist-box {
+    width: 100px;
+    height: 140px;
+  }
+
+  .playlist-box h4 {
+    font-size: 0.9rem;
+  }
+
+  .playlist-box button {
+    font-size: 0.7rem;
+  }
 }

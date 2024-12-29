@@ -125,3 +125,112 @@ h2 {
     font-weight: bold;
     letter-spacing: 1px;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px; /* Add spacing between sections */
+    }
+
+    .content {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .social-icons {
+        justify-content: center; /* Center align icons */
+    }
+
+    .social-icons img,
+    .social-icons i {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .form-container {
+        width: 80%;
+    }
+
+    .button.white-button {
+        width: 60%;
+        padding: 10px;
+    }
+
+    .input {
+        width: 60%;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .social-icons img,
+    .social-icons i {
+        font-size: 25px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .form-container {
+        width: 90%;
+    }
+
+    .button.white-button {
+        width: 70%;
+        font-size: 0.9rem;
+    }
+
+    .input {
+        width: 70%;
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .social-icons img,
+    .social-icons i {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .form-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .button.white-button {
+        width: 80%;
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    .input {
+        width: 80%;
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    .or-text {
+        font-size: 0.9rem;
+    }
+
+    .website {
+        font-size: 0.9rem;
+    }
+}

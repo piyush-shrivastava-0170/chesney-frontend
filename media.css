@@ -20,7 +20,7 @@ body {
   align-items: flex-start;
   width: 90%;
   max-width: 1200px;
-  gap: 30px;
+  gap: 5px; /* Reduced gap */
   padding: 20px;
 }
 
@@ -46,7 +46,6 @@ body {
   position: relative;
   margin: auto; /* Centers the card horizontally */
 }
-
 
 .gallery-card img {
   width: 100%;
@@ -103,6 +102,7 @@ body {
   height: auto; /* Allows flexibility for content */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   color: #f5f5dc;
+  margin-left: 10px; /* Reduced margin */
 }
 
 .red-box h2 {
@@ -256,4 +256,65 @@ body {
 .add-to-existing-playlists-btn:hover {
   background: #5a0014;
   transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-section,
+  .gallery-card {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .red-box {
+    padding: 30px;
+  }
+
+  .media-item {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    gap: 20px;
+  }
+
+  .gallery-card {
+    width: 90%;
+  }
+
+  .red-box {
+    padding: 20px;
+  }
+
+  .media-item {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding: 10px;
+  }
+
+  .gallery-card {
+    width: 100%;
+  }
+
+  .red-box {
+    padding: 15px;
+  }
+
+  .media-item {
+    width: 80px;
+    height: 80px;
+  }
 }

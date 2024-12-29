@@ -152,11 +152,7 @@ form button:hover {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
-  body {
-    overflow: auto;
-  }
-
+@media (max-width: 1024px) {
   .main-container {
     flex-direction: column;
     height: auto;
@@ -165,64 +161,94 @@ form button:hover {
   .left-section {
     width: 100%;
     height: auto;
-    margin-bottom: 10px;
   }
 
   .connect-screen-box {
-    background: #f5f5dc; /* Cream */
-    border-radius: 15px;
-    text-align: center;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 100%; /* Full height of the parent container */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+    height: auto;
+    padding: 15px;
   }
-  
-  .connect-image {
-    width: 100%; /* Full width of the card */
-    height: 100%; /* Full height of the card */
-    max-width: 400px; /* Enlarge image size while maintaining limits */
-    max-height: 400px; /* Larger height */
-    object-fit: cover; /* Force image to cover the space */
-    border-radius: 10px; /* Rounded corners */
-    margin-bottom: 20px;
-  }
-  
-  
 
-  form input, form button {
-    font-size: 0.9rem;
-    padding: 8px;
+  .connect-image {
+    height: 200px; /* Adjusted height for tablets */
   }
 
   .red-box {
     height: auto;
+    padding: 15px;
+  }
+
+  form input,
+  form button {
+    font-size: 0.9rem;
+    padding: 8px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .connect-image {
-    height: 150px;
+    width: 90%; /* Reduce width slightly */
+    height: auto; /* Maintain aspect ratio */
   }
 
   .connect-text {
     font-size: 1.2rem;
   }
 
-  .red-box h2 {
-    font-size: 1.2rem;
+  form input,
+  form button {
+    font-size: 0.9rem;
+    padding: 8px;
   }
 
   .device-item {
     flex-direction: column;
     align-items: flex-start;
+    gap: 5px;
   }
 
   .device-item button {
     align-self: flex-end;
-    margin-top: 5px;
+  }
+
+  .red-box h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+
+  .connect-screen-box {
+    padding: 10px;
+  }
+
+  .connect-image {
+    height: 150px;
+  }
+
+  .connect-text {
+    font-size: 1rem;
+  }
+
+  .red-box h2 {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .device-item {
+    padding: 8px;
+  }
+
+  .device-item p {
+    font-size: 0.8rem;
+  }
+
+  .device-item button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
   }
 }

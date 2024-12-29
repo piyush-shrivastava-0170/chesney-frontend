@@ -172,45 +172,68 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .info-card h1 {
-        font-size: 1.8rem;
+@media (max-width: 1024px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr; /* Two columns layout */
+        gap: 15px; /* Reduced gap */
     }
 
-    .info-card p {
-        font-size: 1rem;
+    .welcome-card {
+        font-size: 1.3rem; /* Reduced font size for smaller screens */
+        padding: 20px; /* Adjust padding */
     }
 
-    .detail {
-        flex-direction: column;
-        text-align: left;
+    .info-card {
+        font-size: 1.1rem;
+        padding: 25px;
     }
 
     .menu-button {
-        width: 100%; /* Ensure full width on smaller screens */
-        max-width: unset; /* Remove the max-width restriction */
+        width: 250px; /* Adjust button width */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        grid-template-areas:
+            "welcome"
+            "menu"
+            "info";
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    .welcome-card {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+
+    .menu-button {
+        width: 100%; /* Full-width buttons */
+    }
+
+    .info-card {
+        padding: 20px;
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .info-card {
-        padding: 15px;
+    .main-container {
+        gap: 10px; /* Smaller gap */
     }
 
-    .info-card h1 {
-        font-size: 1.5rem;
-    }
-
-    .info-card p {
-        font-size: 0.9rem;
-    }
-
-    .detail {
-        font-size: 0.9rem;
+    .welcome-card {
+        font-size: 1rem;
+        padding: 10px;
     }
 
     .menu-button {
-        font-size: 1rem;
-        padding: 10px 15px; /* Smaller padding for mobile */
+        font-size: 0.9rem;
+        padding: 10px 15px; /* Adjust padding */
+    }
+
+    .info-card {
+        font-size: 0.9rem;
+        padding: 15px;
     }
 }

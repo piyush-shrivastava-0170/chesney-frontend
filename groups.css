@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
 /* General Styles */
 body {
   margin: 0;
@@ -122,7 +124,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   width: calc(30% - 10px); /* Smaller width for groups */
-  height: 80px; /* Fixed smaller height for groups */
+  height: 90px; /* Fixed smaller height for groups */
   position: relative;
 }
 
@@ -248,4 +250,53 @@ body {
 
 .modal-content .close:hover {
   color: #5a0014; /* Darker Burgundy */
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%;
+    height: auto;
+  }
+
+  .device-item,
+  .group-box {
+    width: calc(100% - 10px); /* Full width for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%; /* Modal adjusts to smaller screens */
+  }
+
+  .create-group-button,
+  .manage-screen-button,
+  .delete-groups-button {
+    width: 100%; /* Buttons take full width */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .create-group-button,
+  .manage-screen-button,
+  .delete-groups-button {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  .device-item,
+  .group-box {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
 }

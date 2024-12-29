@@ -15,7 +15,7 @@ body {
 
 /* Container */
 .container {
-    display: flex;                                                       
+    display: flex;
     justify-content: space-between;
     width: 85%;
     max-width: 1200px;
@@ -211,4 +211,86 @@ h2 {
     font-size: 1rem;
     font-weight: bold;
     margin: 10px 0; /* Adds space above and below the OR text */
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        text-align: center;
+    }
+
+    .form-container {
+        width: 70%;
+        padding: 25px;
+    }
+
+    .input {
+        width: 60%;
+    }
+
+    .white-button {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .input {
+        width: 80%;
+        padding: 12px;
+    }
+
+    .white-button {
+        width: 80%;
+        font-size: 0.95rem;
+    }
+
+    .form-container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    .social-icons img,
+    .social-icons i {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .social-icons img,
+    .social-icons i {
+        width: 25px;
+        height: 25px;
+    }
+
+    .input {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .white-button {
+        width: 90%;
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+
+    .form-container {
+        padding: 15px;
+        width: 100%;
+    }
 }
