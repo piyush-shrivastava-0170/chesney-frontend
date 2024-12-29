@@ -100,15 +100,14 @@ body {
     color: #800020; /* Burgundy */
     border: none;
     border-radius: 15px;
-    padding: 15px 20px;
-    font-size: 1.2rem;
+    padding: 12px 20px;
+    font-size: 1.1rem; /* Consistent font size */
     font-weight: bold;
     cursor: pointer;
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 300px;
+    width: 300px; /* Consistent width for all buttons */
 }
 
 .menu-button:hover {
@@ -186,6 +185,11 @@ body {
         flex-direction: column;
         text-align: left;
     }
+
+    .menu-button {
+        width: 100%; /* Ensure full width on smaller screens */
+        max-width: unset; /* Remove the max-width restriction */
+    }
 }
 
 @media (max-width: 480px) {
@@ -207,6 +211,6 @@ body {
 
     .menu-button {
         font-size: 1rem;
-        padding: 12px;
+        padding: 10px 15px; /* Smaller padding for mobile */
     }
 }
