@@ -9,34 +9,33 @@
   <style>
     /* Google Button Style */
     .google-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Adjusted spacing between logo and text */
-    background: #f5f5dc; /* Cream */
-    color: #4b0014; /* Burgundy */
-    border: none;
-    border-radius: 20px;
-    padding: 10px; /* Reduced padding for a smaller button */
-    font-size: 0.9rem; /* Slightly smaller font */
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 260px; /* Reduced button width */
-    margin: 20px auto; /* Centers the button */
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px; /* Adjusted spacing between logo and text */
+      background: #f5f5dc; /* Cream */
+      color: #4b0014; /* Burgundy */
+      border: none;
+      border-radius: 20px;
+      padding: 10px; /* Reduced padding for a smaller button */
+      font-size: 0.9rem; /* Slightly smaller font */
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 260px; /* Reduced button width */
+      margin: 20px auto; /* Centers the button */
+    }
 
-.google-button:hover {
-    background: #e8e4d6; /* Lighter Cream */
-}
+    .google-button:hover {
+      background: #e8e4d6; /* Lighter Cream */
+    }
 
-.google-icon {
-    width: 20px; /* Set a smaller fixed width for the logo */
-    height: 20px; /* Match the height for proportional scaling */
-    display: block; /* Ensure it doesn’t cause inline spacing issues */
-}
-
+    .google-icon {
+      width: 20px; /* Set a smaller fixed width for the logo */
+      height: 20px; /* Match the height for proportional scaling */
+      display: block; /* Ensure it doesn’t cause inline spacing issues */
+    }
 
     .or-text {
       text-align: center;
@@ -59,6 +58,55 @@
 
     .login-text a:hover {
       text-decoration: underline;
+    }
+
+    /* Centered Popup Alert Message */
+    .alert-message {
+      position: fixed; /* Position the alert relative to the viewport */
+      top: 50%; /* Center vertically */
+      left: 50%; /* Center horizontally */
+      transform: translate(-50%, -50%); /* Align the center of the alert with the center of the screen */
+      background-color: #4b0014; /* Burgundy */
+      color: #f5f5dc; /* Cream */
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      width: auto; /* Adjust width to content */
+      max-width: 400px; /* Prevent the alert from being too wide */
+      display: none; /* Hidden by default */
+      z-index: 1000; /* Ensure it appears above other elements */
+    }
+
+    /* Optional close button for the alert */
+    .alert-message .close-btn {
+      background: transparent;
+      border: none;
+      color: #f5f5dc; /* Cream */
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      float: right;
+      margin-top: -5px;
+      margin-right: -5px;
+    }
+
+    .alert-message .close-btn:hover {
+      color: #e8e4d6; /* Lighter Cream */
+    }
+
+    /* Background overlay to darken the screen */
+    .alert-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      z-index: 999; /* Below the alert */
+      display: none; /* Hidden by default */
     }
   </style>
 </head>
@@ -112,6 +160,14 @@
     </div>
   </div>
 
+  <!-- Background Overlay -->
+  <div id="alert-overlay" class="alert-overlay"></div>
+
+  <!-- Popup Alert Message -->
+  <div id="alert-message" class="alert-message">
+    <button class="close-btn" id="close-alert">&times;</button>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
@@ -132,6 +188,37 @@
     const auth = getAuth();
     const db = getFirestore(app);
 
+    // Function to display alert message
+    function showAlert(message) {
+      const alertElement = document.getElementById('alert-message');
+      const overlay = document.getElementById('alert-overlay');
+
+      // Set the message and show the elements
+      alertElement.style.display = 'block';
+      overlay.style.display = 'block';
+      alertElement.innerHTML = `
+        <button class="close-btn" id="close-alert">&times;</button>
+        ${message}
+      `;
+    }
+
+    // Function to hide alert message
+    function hideAlert() {
+      const alertElement = document.getElementById('alert-message');
+      const overlay = document.getElementById('alert-overlay');
+
+      // Hide the elements
+      alertElement.style.display = 'none';
+      overlay.style.display = 'none';
+    }
+
+    // Close alert on clicking close button
+    document.getElementById('alert-message').addEventListener('click', (event) => {
+      if (event.target.id === 'close-alert') {
+        hideAlert();
+      }
+    });
+
     // Google Signup Button Handler
     document.getElementById('google-signup').addEventListener('click', async () => {
       const provider = new GoogleAuthProvider();
@@ -150,7 +237,7 @@
         window.location.href = 'home.html';
       } catch (error) {
         console.error("Google Sign-Up error:", error);
-        alert("Google Sign-Up failed: " + error.message);
+        showAlert("Google Sign-Up failed: " + error.message);
       }
     });
 
@@ -172,7 +259,7 @@
         try {
           await sendEmailVerification(user);
           console.log("Verification email sent to:", email);
-          alert("Sign-Up successful! A verification email has been sent to your email address. Please verify your email to proceed.");
+          showAlert("Sign-Up successful! A verification email has been sent to your email address. Please verify your email to proceed.");
 
           // Save user to Firestore
           await setDoc(doc(db, "users", user.uid), {
@@ -188,17 +275,19 @@
             if (user.emailVerified) {
               clearInterval(checkEmailVerification); // Stop checking
               console.log("Email verified. Redirecting to login page.");
-              alert("Your email has been verified. Please log in.");
-              window.location.href = 'login.html'; // Redirect after verification
+              showAlert("Your email has been verified. Please log in.");
+              setTimeout(() => {
+                window.location.href = 'login.html'; // Redirect after verification
+              }, 2000);
             }
           }, 3000); // Check every 3 seconds
         } catch (verificationError) {
           console.error("Error sending verification email:", verificationError);
-          alert("Failed to send verification email. Please try again.");
+          showAlert("Failed to send verification email. Please try again.");
         }
       } catch (error) {
         console.error("Sign-Up error:", error);
-        alert("Sign-Up failed: " + error.message);
+        showAlert("Sign-Up failed: " + error.message);
       }
     });
   </script>
